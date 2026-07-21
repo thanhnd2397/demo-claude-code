@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "DemoApplication (local)",
+      "request": "launch",
+      "mainClass": "vn.thanhnd.demo.web.DemoApplication",
+      "projectName": "web",
+      "env": {
+        "SPRING_PROFILES_ACTIVE": "local"
+      }
+    }
+  ]
+}

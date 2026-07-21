@@ -1,0 +1,2 @@
+No migration scripts yet — this skeleton has no sample domain entity to migrate.
+Use `./mvnw.cmd migration:new -Dmigration.description=<desc> -P=local -N` (run from infrastructure/) to create the first one.

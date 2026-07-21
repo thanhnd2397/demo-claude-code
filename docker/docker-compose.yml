@@ -1,0 +1,82 @@
+services:
+  mysql-primary:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: demo
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: 123456789
+    volumes:
+      - ./mysql-primary/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - ./mysql-primary/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - mysql-primary-data:/var/lib/mysql
+    ports:
+      - "3316:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-u", "root", "-proot_password" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mysql-replica:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: demo
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: 12345678
+    volumes:
+      - ./mysql-replica/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - ./mysql-replica/init-replica.sh:/docker-entrypoint-initdb.d/init-replica.sh:ro
+      - mysql-replica-data:/var/lib/mysql
+    ports:
+      - "3317:3306"
+    depends_on:
+      mysql-primary:
+        condition: service_healthy
+
+  redis:
+    image: redis:7-alpine
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/app/Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      APP_DATASOURCE_PRIMARY_URL: jdbc:mysql://mysql-primary:3306/demo
+      APP_DATASOURCE_PRIMARY_USERNAME: demo
+      APP_DATASOURCE_PRIMARY_PASSWORD: 123456789
+      APP_DATASOURCE_REPLICAS_0_KEY: replica-1
+      APP_DATASOURCE_REPLICAS_0_URL: jdbc:mysql://mysql-replica:3306/demo
+      APP_DATASOURCE_REPLICAS_0_USERNAME: demo
+      APP_DATASOURCE_REPLICAS_0_PASSWORD: 12345678
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    depends_on:
+      mysql-primary:
+        condition: service_healthy
+      mysql-replica:
+        condition: service_started
+      redis:
+        condition: service_started
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+
+volumes:
+  mysql-primary-data:
+  mysql-replica-data:
+  redis-data:
