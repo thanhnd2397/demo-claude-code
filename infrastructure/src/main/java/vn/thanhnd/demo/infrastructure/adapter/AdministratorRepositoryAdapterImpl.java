@@ -2,16 +2,20 @@ package vn.thanhnd.demo.infrastructure.adapter;
 
 import lombok.RequiredArgsConstructor;
 import vn.thanhnd.demo.domain.adapter.AdministratorRepositoryPort;
+import vn.thanhnd.demo.domain.adapter.CacheAdapter;
 import vn.thanhnd.demo.domain.enums.AdministratorStatus;
 import vn.thanhnd.demo.domain.exception.DomainValidationException;
 import vn.thanhnd.demo.domain.model.Administrator;
+import vn.thanhnd.demo.domain.model.AdministratorPermissionsCacheData;
 import vn.thanhnd.demo.infrastructure.mapper.AdministratorMapper;
 import vn.thanhnd.demo.infrastructure.persistence.entity.AdministratorEntity;
 import vn.thanhnd.demo.infrastructure.persistence.entity.RoleEntity;
 import vn.thanhnd.demo.infrastructure.persistence.repository.AdministratorJpaRepository;
 import vn.thanhnd.demo.infrastructure.persistence.repository.RoleJpaRepository;
 import vn.thanhnd.demo.util.annotation.Adapter;
+import vn.thanhnd.demo.util.constant.ApplicationConstants;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -20,9 +24,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AdministratorRepositoryAdapterImpl implements AdministratorRepositoryPort {
 
+    private static final long PERMISSIONS_CACHE_TTL_MINUTES = 15;
+
     private final AdministratorJpaRepository administratorJpaRepository;
     private final RoleJpaRepository roleJpaRepository;
     private final AdministratorMapper administratorMapper;
+    private final CacheAdapter cacheAdapter;
 
     @Override
     public Optional<Administrator> findByUsername(String username) {
@@ -66,14 +73,33 @@ public class AdministratorRepositoryAdapterImpl implements AdministratorReposito
             throw new DomainValidationException("E-01-ADMINISTRATOR-0011");
         }
         entity.setRoles(roles);
-        return administratorMapper.toDomain(administratorJpaRepository.save(entity));
+        Administrator updated = administratorMapper.toDomain(administratorJpaRepository.save(entity));
+        cacheAdapter.delete(ApplicationConstants.cacheKeyAdministratorPermissions(administratorId));
+        return updated;
     }
 
     @Override
     public Administrator updateStatus(String administratorId, AdministratorStatus status) {
         AdministratorEntity entity = findEntityOrThrow(administratorId);
         entity.setStatus(status);
-        return administratorMapper.toDomain(administratorJpaRepository.save(entity));
+        Administrator updated = administratorMapper.toDomain(administratorJpaRepository.save(entity));
+        cacheAdapter.delete(ApplicationConstants.cacheKeyAdministratorPermissions(administratorId));
+        return updated;
+    }
+
+    @Override
+    public AdministratorPermissionsCacheData findPermissions(String administratorId) {
+        String key = ApplicationConstants.cacheKeyAdministratorPermissions(administratorId);
+        AdministratorPermissionsCacheData cached = cacheAdapter.get(key, AdministratorPermissionsCacheData.class);
+        if (cached != null) {
+            return cached;
+        }
+
+        Administrator administrator = administratorMapper.toDomain(findEntityOrThrow(administratorId));
+        AdministratorPermissionsCacheData data =
+                new AdministratorPermissionsCacheData(administrator.roleNames(), administrator.permissionNames());
+        cacheAdapter.set(key, data, LocalDateTime.now().plusMinutes(PERMISSIONS_CACHE_TTL_MINUTES));
+        return data;
     }
 
     private AdministratorEntity findEntityOrThrow(String administratorId) {

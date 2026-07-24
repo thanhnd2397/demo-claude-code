@@ -2,6 +2,7 @@ package vn.thanhnd.demo.domain.adapter;
 
 import vn.thanhnd.demo.domain.enums.AdministratorStatus;
 import vn.thanhnd.demo.domain.model.Administrator;
+import vn.thanhnd.demo.domain.model.AdministratorPermissionsCacheData;
 
 import java.util.List;
 import java.util.Optional;
@@ -79,4 +80,13 @@ public interface AdministratorRepositoryPort {
      * @throws vn.thanhnd.demo.domain.exception.DomainValidationException if {@code administratorId} does not exist
      */
     Administrator updateStatus(String administratorId, AdministratorStatus status);
+
+    /**
+     * Fetch the administrator's current role and permission names, cache-aside via Redis.
+     *
+     * @param administratorId The administrator's id
+     * @return The current role and permission names
+     * @throws vn.thanhnd.demo.domain.exception.DomainValidationException if {@code administratorId} does not exist
+     */
+    AdministratorPermissionsCacheData findPermissions(String administratorId);
 }

@@ -22,4 +22,12 @@ public final class ApplicationConstants {
     public static String cacheKeyAdministratorTokenBlacklist(String jti) {
         return "CACHE_ADMINISTRATOR_TOKEN_BLACKLIST_" + jti;
     }
+
+    public static String cacheKeyAdministratorPermissions(String administratorId) {
+        return "CACHE_ADMINISTRATOR_PERMISSIONS_" + administratorId;
+    }
+
+    public static String cacheKeyAdministratorLoginFailures(String username) {
+        return "CACHE_ADMINISTRATOR_LOGIN_FAILURES_" + username;
+    }
 }

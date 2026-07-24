@@ -4,8 +4,10 @@ Java 25 · Spring Boot 4.0.1 · MySQL + Redis · REST API
 
 @.claude/core/architecture.md
 @.claude/core/modules.md
+@docs/architecture/project-overview.md
 
 > Full docs: `.claude/core/` (tech-stack.md, development.md available on demand)
+> Feature/dependency reference: `docs/architecture/project-overview.md` — tech stack, full use-case catalog, cross-feature dependency diagram, error codes, cache keys. Check it before planning a new feature; keep it updated when features/ports/adapters/endpoints change (see `implement-mode.md`).
 
 ---
 
@@ -134,8 +136,11 @@ Whenever a plan or spec document is created (explicitly requested, or produced b
 | -------------- | ------- |
 | Plan (implementation plan, explanatory/analysis doc) | `docs/plan/` |
 | Spec (API design or other spec document) | `docs/spec/` |
+| Architecture/feature reference (living project overview, not tied to one task) | `docs/architecture/` |
 
 Create the target folder if it does not exist. Do not save these documents anywhere else (e.g. repo root, `.claude/`).
+
+**Plan Mode note:** Claude Code's built-in plan-mode tool always writes its working plan file to a fixed location outside the repo (e.g. `~/.claude/plans/...`) — that location cannot be changed. Once a plan produced this way is approved, immediately save a copy of the final plan content into `docs/plan/` as the durable project artifact, following the same naming/metadata convention as any other plan doc.
 
 ---
 
