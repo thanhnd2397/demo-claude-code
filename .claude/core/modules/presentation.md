@@ -1,69 +1,5 @@
 # Presentation Layer — Detailed Reference
 
-## Full Controller Example: AdministratorManagementController
-
-Demonstrates the complete view controller pattern with HTMX, ResultWrapper, and redirect handling.
-
-```java
-@Controller
-@RequiredArgsConstructor
-@RequestMapping("/administrator-management")
-public class AdministratorManagementController {
-
-    private final SearchAdministratorUseCase searchUseCase;
-    private final UpdateAdministratorUseCase updateUseCase;
-    private final ResponseHelper responseHelper;
-    private final MessageSource messageSource;
-
-    @GetMapping
-    @PreAuthorize("hasAnyAuthority('admin-view', 'super-admin')")
-    public String list(@ModelAttribute SearchRequest request, Model model) {
-        model.addAttribute("results", searchUseCase.execute(request));
-        return "administrator/list";
-    }
-
-    @PostMapping("/update/{id}")
-    @PreAuthorize("hasAnyAuthority('admin-edit', 'super-admin')")
-    public Object update(
-            @PathVariable String id,
-            @Valid @ModelAttribute UpdateRequest request,
-            BindingResult bindingResult,
-            Model model,
-            HttpServletRequest httpRequest,
-            RedirectAttributes redirectAttributes) {
-
-        if (bindingResult.hasErrors()) {
-            return responseHelper.resolveView(httpRequest,
-                "administrator/update", "administrator/update :: general");
-        }
-
-        ResultWrapper<Void> result = updateUseCase.execute(request);
-        if (!result.isSuccess()) {
-            List<String> messages = result.getErrors().stream()
-                .map(e -> messageSource.getMessage(e.errorCode(), null, Locale.getDefault()))
-                .toList();
-            model.addAttribute("errorMessages", messages);
-            return responseHelper.resolveView(httpRequest,
-                "administrator/update", "administrator/update :: general");
-        }
-
-        return responseHelper.handleRedirectWithSessionMessage(
-            httpRequest, "/administrator-management", "Updated successfully", redirectAttributes);
-    }
-
-    @PostMapping("/delete/{id}")
-    @PreAuthorize("hasAnyAuthority('admin-delete', 'super-admin')")
-    public Object delete(@PathVariable String id, HttpServletRequest httpRequest,
-            RedirectAttributes redirectAttributes) {
-        deleteUseCase.execute(id);
-        return responseHelper.handleRedirectWithSessionMessage(
-            httpRequest, "/administrator-management", "Deleted successfully", redirectAttributes);
-    }
-}
-```
-
----
-
 ## Exception Handlers
 
 ### ApiExceptionHandler
@@ -73,17 +9,6 @@ public class AdministratorManagementController {
 public class ApiExceptionHandler {
     // Returns ResponseEntity<RestResponse<T>> with appropriate HTTP status
     // Uses MessageSource for i18n error messages
-}
-```
-
-### WebExceptionHandler
-
-```java
-@ControllerAdvice(basePackages = "vn.thanhnd.demo.presentation.view")
-public class WebExceptionHandler {
-    // HTMX requests: ResponseEntity<Void> with HX-Redirect header
-    // Non-HTMX requests: ModelAndView for error pages
-    // Uses ResponseHelper for HTMX detection
 }
 ```
 
@@ -104,27 +29,17 @@ public class WebExceptionHandler {
 - On success: generates JWT + refresh token, updates login info, returns JSON
 - On failure: returns 401 JSON response
 
-### SessionRefreshFilter
-
-- Extends session expiration on every authenticated web request
-
 ---
 
 ## Security Configuration Details
 
-### API Filter Chain (`@Order(1)`)
+### API Filter Chain
 
 - Stateless (`SessionCreationPolicy.STATELESS`)
 - JWT via `JwtAuthenticationFilter`
 - CSRF disabled
 - Security headers: `X-Frame-Options: DENY`, `nosniff`, `HSTS`, CSP
 - Public: `/api/v1/auth/login`, `/api/v1/auth/refresh-token`
-
-### Web Filter Chain (`@Order(2)`)
-
-- Session-based authentication stored in Redis
-- CSRF enabled
-- Public: `/`, `/login`, `/register`, `/css/**`, `/js/**`, `/images/**`
 
 ---
 

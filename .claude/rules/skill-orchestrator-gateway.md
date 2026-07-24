@@ -10,7 +10,7 @@ Before editing any file, identify which mode applies and defer to that rule file
 | If the file matches... | Apply |
 | ----------------------- | ----- |
 | `**/src/main/**/*.java` | `implement-mode.md` |
-| `.cursor/plans/**/*.md` | `plan-review-checklist.md` |
+| `docs/plan/**/*.md` | `plan-review-checklist.md` |
 
 If none match (docs, config, build files), fall back to the baseline invariants below plus the root `CLAUDE.md`.
 

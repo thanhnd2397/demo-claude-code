@@ -62,29 +62,6 @@ responseMaker.writeResponse(httpServletResponse,
 
 ---
 
-## ResponseHelper and RequestHelper implementations
-
-Both are `@Component` beans implementing their respective interfaces.
-
-**RequestHelperImpl**: checks `request.getHeader("HX-Request")` equals `"true"`.
-
-**ResponseHelperImpl** decision table:
-
-| Method | HTMX? | Returns |
-| ------ | ----- | ------- |
-| `resolveView(req, full, fragment)` | yes | `fragment` (String) |
-| `resolveView(req, full, fragment)` | no | `full` (String) |
-| `createRedirectResponse(req, url)` | yes | `ResponseEntity.ok().header("HX-Redirect", url).build()` |
-| `createRedirectResponse(req, url)` | no | `null` |
-| `handleRedirect(req, url, attrs)` | yes | calls `createRedirectResponse` |
-| `handleRedirect(req, url, attrs)` | no | sets `RedirectAttributes` and returns `"redirect:" + url` |
-| `handleRedirectWithSessionMessage(req, url, msg, attrs)` | yes | stores `msg` in session, returns `ResponseEntity` with `HX-Redirect` |
-| `handleRedirectWithSessionMessage(req, url, msg, attrs)` | no | stores `msg` in flash, returns `"redirect:" + url` |
-
-Session messages are read-once (cleared after first read) to avoid showing on page refresh.
-
----
-
 ## ApplicationConstants Key Categories
 
 | Prefix | Examples |

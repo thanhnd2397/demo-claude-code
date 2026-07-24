@@ -7,5 +7,10 @@ import vn.thanhnd.demo.domain.model.MailMessage;
  */
 public interface MailSenderAdapter {
 
+    /**
+     * Send an email message.
+     *
+     * @param message The message to send (recipients, subject, HTML body)
+     */
     void send(MailMessage message);
 }

@@ -28,19 +28,20 @@ cd docker && docker-compose up -d
 cd web && ../mvnw.cmd spring-boot:run
 ```
 
-URLs: Web `http://localhost:8080` · API `http://localhost:8080/api/v1`
+URL: API `http://localhost:8080/api/v1`
 
 ## Database Migrations
 
+Migrations run automatically on application startup (Spring Boot's Flyway auto-configuration). To run them standalone without booting the app:
+
 ```powershell
-./mvnw.cmd migration:up -P=local -N       # run migrations
-./mvnw.cmd migration:status -P=local -N   # check status
-./mvnw.cmd migration:new -Dmigration.description=<desc> -P=local -N  # new migration
+./mvnw.cmd flyway:info -pl infrastructure       # check status
+./mvnw.cmd flyway:migrate -pl infrastructure    # run migrations
 ```
 
-Migrations run on primary only; replica replicates schema changes automatically.
+New migration files are added by hand at `infrastructure/src/main/resources/db/migration/V{next}__{description}.sql` (Flyway naming convention, sequential version numbers).
 
-Tailwind is compiled automatically during the Maven build.
+Migrations run on primary only; replica replicates schema changes automatically.
 
 ## Profiles
 

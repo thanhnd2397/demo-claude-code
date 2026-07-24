@@ -1,6 +1,6 @@
 ---
 description: Checklist for reviewing plan documents before execution
-globs: ["**/.cursor/plans/**/*.md"]
+globs: ["**/docs/plan/**/*.md"]
 alwaysApply: false
 ---
 

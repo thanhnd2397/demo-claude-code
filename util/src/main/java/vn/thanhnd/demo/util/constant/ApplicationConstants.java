@@ -14,4 +14,12 @@ public final class ApplicationConstants {
 
     public static final String CONTENT_TYPE_JSON = "application/json";
     public static final String CONTENT_TYPE_CSV = "text/csv; charset=UTF-8";
+
+    public static String cacheKeyAdministratorRefreshToken(String administratorId) {
+        return "CACHE_ADMINISTRATOR_REFRESH_TOKEN_" + administratorId;
+    }
+
+    public static String cacheKeyAdministratorTokenBlacklist(String jti) {
+        return "CACHE_ADMINISTRATOR_TOKEN_BLACKLIST_" + jti;
+    }
 }

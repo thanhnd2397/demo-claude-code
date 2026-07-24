@@ -27,7 +27,7 @@
         <lombok.version>1.18.44</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <mysql-connector-j.version>9.1.0</mysql-connector-j.version>
-        <migrations-maven-plugin.version>1.4.0</migrations-maven-plugin.version>
+        <jjwt.version>0.12.6</jjwt.version>
     </properties>
 
     <modules>
@@ -72,6 +72,21 @@
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql-connector-j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -95,11 +110,6 @@
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.mybatis.maven</groupId>
-                    <artifactId>migrations-maven-plugin</artifactId>
-                    <version>${migrations-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

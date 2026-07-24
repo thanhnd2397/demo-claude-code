@@ -1,6 +1,6 @@
 # Monolithic — Spring Boot Clean Architecture
 
-Java 25 · Spring Boot 4.0.1 · MySQL + Redis · Thymeleaf + Tailwind CSS + HTMX
+Java 25 · Spring Boot 4.0.1 · MySQL + Redis · REST API
 
 @.claude/core/architecture.md
 @.claude/core/modules.md
@@ -104,7 +104,7 @@ Four guardrails against the most common LLM coding failures.
 | Module | Location | Purpose |
 | ------ | -------- | ------- |
 | web | `web/` | Application entry point |
-| presentation | `presentation/` | HTTP layer — controllers, filters, security, templates |
+| presentation | `presentation/` | HTTP layer — controllers, filters, security |
 | application | `application/` | Use cases, DTOs |
 | domain | `domain/` | Business logic, domain models, adapter interfaces (ports) |
 | infrastructure | `infrastructure/` | Adapters, JPA entities, repositories, DB migrations |
@@ -122,7 +122,20 @@ The `.claude/rules/` directory contains rule files loaded automatically by Claud
 | --------- | ----- |
 | `skill-orchestrator-gateway.md` | Always loaded |
 | `implement-mode.md` | Path-scoped: `**/src/main/**/*.java` |
-| `plan-review-checklist.md` | Path-scoped: `.cursor/plans/**/*.md` |
+| `plan-review-checklist.md` | Path-scoped: `docs/plan/**/*.md` |
+
+---
+
+## Document Output Locations
+
+Whenever a plan or spec document is created (explicitly requested, or produced by a skill), save it under `docs/`:
+
+| Document type | Save to |
+| -------------- | ------- |
+| Plan (implementation plan, explanatory/analysis doc) | `docs/plan/` |
+| Spec (API design or other spec document) | `docs/spec/` |
+
+Create the target folder if it does not exist. Do not save these documents anywhere else (e.g. repo root, `.claude/`).
 
 ---
 
@@ -147,6 +160,5 @@ The `.claude/rules/` directory contains rule files loaded automatically by Claud
 5. Command use cases return `ResultWrapper<T>` via `ResultHandler.handle(...)` — never throw for validation
 6. DTO/Bean Validation (`@NotBlank`, `@Size`, `@Pattern`) for format/length/required — DB-dependent checks only in use case
 7. Cache: check first on reads, invalidate on writes
-8. HTMX for all dynamic web interactions — no custom JS for behavior HTMX covers
-9. No `var` keyword — explicit types always
-10. JavaDoc on all public/protected methods; inline comments for non-obvious logic
+8. No `var` keyword — explicit types always
+9. JavaDoc on all public/protected methods; inline comments for non-obvious logic

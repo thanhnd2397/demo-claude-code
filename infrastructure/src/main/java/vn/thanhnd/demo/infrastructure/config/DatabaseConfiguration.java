@@ -1,11 +1,13 @@
 package vn.thanhnd.demo.infrastructure.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -16,10 +18,17 @@ import java.util.Map;
 /**
  * Wires the primary/replica routing datasource. {@code @Transactional(readOnly = true)} reads are
  * routed to a healthy replica; writes always go to the primary. See {@link ReplicationRoutingDataSource}.
+ *
+ * <p>{@code @EnableJpaRepositories}/{@code @EntityScan} are explicit here because Spring Boot's
+ * auto-configuration only scans from the {@code @SpringBootApplication} class's own package
+ * ({@code vn.thanhnd.demo.web}) downward, which does not reach the sibling
+ * {@code vn.thanhnd.demo.infrastructure.persistence} package.
  */
 @Configuration
 @EnableScheduling
 @EnableConfigurationProperties({DemoDataSourceProperties.class, ReplicaHealthProperties.class})
+@EnableJpaRepositories(basePackages = "vn.thanhnd.demo.infrastructure.persistence.repository")
+@EntityScan(basePackages = "vn.thanhnd.demo.infrastructure.persistence.entity")
 public class DatabaseConfiguration {
 
     private static final String PRIMARY_KEY = "primary";

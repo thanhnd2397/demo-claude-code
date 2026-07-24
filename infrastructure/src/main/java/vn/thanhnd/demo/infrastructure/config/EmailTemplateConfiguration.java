@@ -7,7 +7,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 /**
- * Dedicated Thymeleaf engine for rendering email bodies, separate from the main web engine.
+ * Standalone Thymeleaf engine for rendering email bodies only — the app is a pure REST API
+ * with no web view layer.
  */
 @Configuration
 public class EmailTemplateConfiguration {

@@ -288,7 +288,7 @@ public class UpdatePasswordRequest { ... }
 
 ### EmailTemplateConfiguration (`config/`)
 
-Provides a dedicated `emailTemplateEngine` bean separate from the main Thymeleaf engine. Resolves templates from `classpath:/templates/` with `.html` suffix.
+Provides a standalone Thymeleaf `emailTemplateEngine` bean used only for rendering outbound email HTML — unrelated to any web view layer. Resolves templates from `classpath:/templates/` with `.html` suffix.
 
 ```java
 @Configuration

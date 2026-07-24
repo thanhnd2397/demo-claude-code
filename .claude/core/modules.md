@@ -16,9 +16,7 @@
 ```
 monolithic/
 ├── web/src/main/java/.../web/MonolithicApplication.java
-├── presentation/src/main/
-│   ├── java/.../presentation/{api,view,filter,handler,config}/
-│   └── resources/{static/,templates/}
+├── presentation/src/main/java/.../presentation/{api,filter,handler,config}/
 ├── application/src/main/java/.../application/usecase/
 ├── domain/src/main/java/.../domain/{model,adapter,enums,exception}/
 ├── infrastructure/src/main/
@@ -26,7 +24,5 @@ monolithic/
 │   └── resources/db/migration/
 ├── util/src/main/java/.../util/{constant,helper,response,exception}/
 ├── docker/{docker-compose.yml,app/,mysql-primary/,mysql-replica/,redis/,nginx/}
-├── pom.xml
-├── tailwind.config.js
-└── package.json
+└── pom.xml
 ```

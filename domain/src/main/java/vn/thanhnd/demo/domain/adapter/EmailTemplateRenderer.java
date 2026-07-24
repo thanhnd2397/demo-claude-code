@@ -9,5 +9,12 @@ import java.util.Map;
  */
 public interface EmailTemplateRenderer {
 
+    /**
+     * Render a template to an HTML string.
+     *
+     * @param templateName The logical template name
+     * @param model The variables available to the template
+     * @return The rendered HTML
+     */
     String render(String templateName, Map<String, Object> model);
 }

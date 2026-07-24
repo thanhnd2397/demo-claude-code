@@ -6,19 +6,13 @@
 - **Spring Boot 4.0.1** — application framework
 - **Spring Security** — authentication and authorization
 - **Spring Data JPA / Hibernate** — data persistence
-- **MyBatis Migrations** — database migration management
+- **Flyway** — database migration management
 
 ## Database & Caching
 
 - **MySQL** — primary database with replica setup for read scaling
 - **Redis** — caching and session storage
 - **HikariCP** — connection pooling
-
-## Frontend
-
-- **Thymeleaf** — server-side template engine
-- **Tailwind CSS** — utility-first CSS framework
-- **HTMX** — dynamic web interactions without full page reloads
 
 ## Infrastructure
 
@@ -37,5 +31,5 @@
 - **JUnit 5** — unit testing
 - **Testcontainers** — integration testing with Docker containers
 - **Spring Boot Test** — slice tests
-- **MyBatis Migrations** — migration execution in tests
+- **Flyway** — migration execution in tests
 - **JaCoCo** — code coverage (100% branch coverage required)

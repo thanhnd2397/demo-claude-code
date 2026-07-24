@@ -13,7 +13,7 @@ Applies whenever editing production code under `src/main/`.
 - **domain**: immutable records, no framework annotations, no Lombok. Factory methods / compact constructors validate; throw `DomainValidationException("E-{layer}-{ENTITY}-{seq}")` on failure. Adapter interfaces (ports) live here, not implementations.
 - **application**: one use case = one business operation, single public method, annotated `@UseCase`. `@Transactional(readOnly = true)` for reads, `@Transactional` for writes. Command use cases return `ResultWrapper<T>` via `ResultHandler.handle(Supplier<T>)` — never throw for validation.
 - **infrastructure**: implements domain ports. JPA entities, MapStruct mappers, cache/adapters live here. Lombok allowed (e.g. `@RequiredArgsConstructor`, `@Log4j2`) — never on domain models.
-- **presentation**: controllers, filters, exception handlers. `@PreAuthorize` for authorization. HTMX for all dynamic behavior — no custom JS for what HTMX already covers.
+- **presentation**: controllers, filters, exception handlers. `@PreAuthorize` for authorization.
 - **util**: shared constants, helpers, base exceptions, response models — no business logic.
 
 ## Style rules
