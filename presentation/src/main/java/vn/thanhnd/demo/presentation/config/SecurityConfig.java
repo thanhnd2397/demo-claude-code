@@ -15,10 +15,14 @@ import vn.thanhnd.demo.presentation.handler.RestAuthenticationEntryPoint;
 
 /**
  * Stateless JWT security: no sessions, no CSRF (not applicable to a bearer-token API),
- * {@code /auth/login}, {@code /auth/register}, {@code /auth/refresh} open (reachable at
- * {@code /api/v1/auth/*} once {@code server.servlet.context-path} is applied), everything else
- * requires a valid access token. Method-level {@code @PreAuthorize("hasAuthority('ROLE_NAME')")}
- * is available on any endpoint once this is wired in.
+ * {@code /auth/login}, {@code /auth/register}, {@code /auth/refresh}, the Swagger/OpenAPI paths,
+ * and {@code /error} are open (reachable at {@code /api/v1/*} once {@code server.servlet.context-path}
+ * is applied), everything else requires a valid access token. {@code /error} must stay permitted:
+ * any unhandled MVC exception triggers a servlet-container forward to it, which re-enters this
+ * filter chain as a new dispatch — without this rule that forward gets rejected as unauthenticated,
+ * masking the real error behind a misleading 401. Method-level
+ * {@code @PreAuthorize("hasAuthority('ROLE_NAME')")} is available on any endpoint once this is wired
+ * in.
  */
 @Configuration
 @EnableMethodSecurity
@@ -35,7 +39,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register", "/auth/refresh").permitAll()
+                        .requestMatchers(
+                                "/auth/login", "/auth/register", "/auth/refresh",
+                                "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/error").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(restAuthenticationEntryPoint)

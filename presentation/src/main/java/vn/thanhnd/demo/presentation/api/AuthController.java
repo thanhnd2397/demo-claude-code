@@ -1,6 +1,7 @@
 package vn.thanhnd.demo.presentation.api;
 
 import jakarta.validation.Valid;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +38,9 @@ public class AuthController extends BaseController {
             RegisterAdministratorUseCase registerAdministratorUseCase,
             RefreshTokenUseCase refreshTokenUseCase,
             LogoutUseCase logoutUseCase,
-            ResponseMaker responseMaker) {
-        super(responseMaker);
+            ResponseMaker responseMaker,
+            MessageSource messageSource) {
+        super(responseMaker, messageSource);
         this.loginUseCase = loginUseCase;
         this.registerAdministratorUseCase = registerAdministratorUseCase;
         this.refreshTokenUseCase = refreshTokenUseCase;

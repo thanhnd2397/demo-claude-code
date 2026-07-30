@@ -1,6 +1,7 @@
 package vn.thanhnd.demo.presentation.api;
 
 import jakarta.validation.Valid;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,8 +40,9 @@ public class AdministratorController extends BaseController {
             ListAdministratorsUseCase listAdministratorsUseCase,
             UpdateAdministratorRolesUseCase updateAdministratorRolesUseCase,
             UpdateAdministratorStatusUseCase updateAdministratorStatusUseCase,
-            ResponseMaker responseMaker) {
-        super(responseMaker);
+            ResponseMaker responseMaker,
+            MessageSource messageSource) {
+        super(responseMaker, messageSource);
         this.listAdministratorsUseCase = listAdministratorsUseCase;
         this.updateAdministratorRolesUseCase = updateAdministratorRolesUseCase;
         this.updateAdministratorStatusUseCase = updateAdministratorStatusUseCase;

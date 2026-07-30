@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.LocaleResolver;
 import vn.thanhnd.demo.application.base.ResultWrapper;
 import vn.thanhnd.demo.application.usecase.administrator.AccessTokenClaims;
 import vn.thanhnd.demo.application.usecase.administrator.ValidateAccessTokenUseCase;
@@ -20,6 +22,7 @@ import vn.thanhnd.demo.util.helper.ResponseMaker;
 import vn.thanhnd.demo.util.response.RestResponse;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,6 +31,9 @@ import java.util.stream.Stream;
  * Populates {@link SecurityContextHolder} from a {@code Bearer} access token. Requests with no
  * {@code Authorization} header are passed through unauthenticated, letting {@code SecurityConfig}'s
  * authorization rules decide whether the endpoint requires a token.
+ * <p>
+ * Runs in the Spring Security filter chain, before {@code DispatcherServlet} — {@code LocaleContextHolder}
+ * is not populated yet here, so the locale is resolved from the request manually.
  */
 @Component
 @RequiredArgsConstructor
@@ -38,6 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final ValidateAccessTokenUseCase validateAccessTokenUseCase;
     private final ResponseMaker responseMaker;
+    private final MessageSource messageSource;
+    private final LocaleResolver localeResolver;
 
     @Override
     protected void doFilterInternal(
@@ -54,7 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (!result.isSuccess()) {
             DomainError error = result.getErrors().get(0);
-            RestResponse<Void> body = responseMaker.createFailResponse(SERVICE_NAME, error.errorCode(), error.errorCode());
+            Locale locale = localeResolver.resolveLocale(request);
+            String message = messageSource.getMessage(error.errorCode(), error.args(), error.errorCode(), locale);
+            RestResponse<Void> body = responseMaker.createFailResponse(SERVICE_NAME, error.errorCode(), message);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             responseMaker.writeResponse(response, body);
             return;
