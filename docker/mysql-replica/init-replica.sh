@@ -13,7 +13,8 @@ mysql -u root -p"${MYSQL_ROOT_PASSWORD}" <<-EOSQL
     SOURCE_HOST='mysql-primary',
     SOURCE_USER='repl',
     SOURCE_PASSWORD='repl_password',
-    SOURCE_AUTO_POSITION=1;
+    SOURCE_AUTO_POSITION=1,
+    GET_SOURCE_PUBLIC_KEY=1;
   START REPLICA;
 EOSQL
 

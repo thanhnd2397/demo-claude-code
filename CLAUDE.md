@@ -8,6 +8,7 @@ Java 25 · Spring Boot 4.0.1 · MySQL + Redis · REST API
 
 > Full docs: `.claude/core/` (tech-stack.md, development.md available on demand)
 > Feature/dependency reference: `docs/architecture/project-overview.md` — tech stack, full use-case catalog, cross-feature dependency diagram, error codes, cache keys. Check it before planning a new feature; keep it updated when features/ports/adapters/endpoints change (see `implement-mode.md`).
+> Companion visualization: `docs/architecture/architecture-map.html` — same content as an interactive, self-contained page. Whenever `project-overview.md` changes, update this file too (see its own §9 and `implement-mode.md`) — the two must never drift apart.
 
 ---
 
@@ -99,6 +100,12 @@ Four guardrails against the most common LLM coding failures.
 
 **Run after every code generation step. Fix all errors before marking complete.**
 
+### Runtime testing (running the app, Docker services, etc.)
+
+- Any process started to manually verify a change (`java -jar ...`, `mvnw spring-boot:run`, Docker containers started solely for the test) **must be stopped once verification is done** — do not leave it running in the background after reporting results.
+- Before stopping, check whether the process was already running before you started testing (e.g. an IDE-launched instance on the same port) — only stop what you started yourself, and say so if you're stopping something you didn't start.
+- If the user explicitly wants the app left running (e.g. to click around themselves), say so instead of stopping it — but default to shutting it down.
+
 ---
 
 ## Module Quick Reference
@@ -139,6 +146,8 @@ Whenever a plan or spec document is created (explicitly requested, or produced b
 | Architecture/feature reference (living project overview, not tied to one task) | `docs/architecture/` |
 
 Create the target folder if it does not exist. Do not save these documents anywhere else (e.g. repo root, `.claude/`).
+
+The architecture reference has two parts that must stay in sync: `docs/architecture/project-overview.md` (source of truth, Markdown/Mermaid) and `docs/architecture/architecture-map.html` (interactive companion, same content as plain JS data). Editing one without the other is incomplete — see `implement-mode.md`.
 
 **Plan Mode note:** Claude Code's built-in plan-mode tool always writes its working plan file to a fixed location outside the repo (e.g. `~/.claude/plans/...`) — that location cannot be changed. Once a plan produced this way is approved, immediately save a copy of the final plan content into `docs/plan/` as the durable project artifact, following the same naming/metadata convention as any other plan doc.
 

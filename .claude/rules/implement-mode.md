@@ -39,3 +39,5 @@ After adding, changing, or removing any of the above, update `docs/architecture/
 - New/changed use case, port, adapter, or endpoint → update its table (§3, §5, §6, §7).
 - New cross-feature coupling (a use case now touches a port/cache key it didn't before) → update the Mermaid diagram in §4.
 - New business domain (not just a new operation on an existing model) → add a subsection under §3 and extend §2's diagram if a new module-level dependency appears.
+
+Then update its companion visualization, `docs/architecture/architecture-map.html`, to match — same content, mirrored as plain JS data in its `<script>` block (see the file's own §9 "How to extend this document" for exactly which array/section maps to which change). Do not let one of the two files change without the other; they must always describe the same state of the codebase.

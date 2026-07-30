@@ -8,7 +8,9 @@
       "mainClass": "vn.thanhnd.demo.web.DemoApplication",
       "projectName": "web",
       "env": {
-        "SPRING_PROFILES_ACTIVE": "local"
+        "SPRING_PROFILES_ACTIVE": "local",
+        "MAIL_USERNAME": "${env:MAIL_USERNAME}",
+        "MAIL_PASSWORD": "${env:MAIL_PASSWORD}"
       }
     }
   ]

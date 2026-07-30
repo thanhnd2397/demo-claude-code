@@ -11,6 +11,8 @@
 
 **Maintenance rule**: this document (its tables and diagrams) MUST be updated whenever a use case, port, adapter, controller endpoint, cache key, or error code is added/changed/removed. See `.claude/rules/implement-mode.md`.
 
+**Companion visualization**: [`docs/architecture/architecture-map.html`](architecture-map.html) is a self-contained, interactive HTML rendering of this same document (module tree, dependency graph, request pipeline, endpoint/error-code/cache-key tables, known gaps). It MUST be kept in sync every time this document changes — see §9 and `.claude/rules/implement-mode.md`.
+
 ---
 
 ## 1. Tech stack
@@ -26,8 +28,11 @@
 | Auth | JWT (jjwt 0.12.6, HS-signed) for stateless API auth; Spring Security (`spring-boot-starter-security`), method security (`@PreAuthorize`) |
 | Password hashing | BCrypt (`spring-security-crypto`) |
 | Object mapping | MapStruct 1.6.3 (entity ↔ domain), Lombok 1.18.44 (infrastructure/presentation only — never on domain models) |
-| Email | Spring Mail + Thymeleaf templates (rendering works; no template files exist yet — see §8 gaps) |
+| Email | Spring Mail + Thymeleaf templates. First template in use: `email/login-notification` (login notification) |
+| Async | `@EnableAsync` (Spring, default `SimpleAsyncTaskExecutor`) — added for fire-and-forget login notification email; first async usage in the project |
+| i18n | `MessageSource` (Spring Boot default `ResourceBundleMessageSource`, `web/src/main/resources/messages(_vi).properties`) resolves every `error_code` to a human message. Locale from `Accept-Language` via `AcceptHeaderLocaleResolver` bean (`presentation/.../config/LocaleConfiguration.java`), default English, supports `en`/`vi` |
 | Object storage | Port defined (`ObjectStorageAdapter`), **no implementation yet** |
+| API docs | springdoc-openapi 3.0.3 (`springdoc-openapi-starter-webmvc-ui`, first Boot-4-compatible line) — `OpenApiConfig` (presentation/config) defines metadata + `bearerAuth` JWT security scheme; UI/spec public at `/swagger-ui/**` and `/v3/api-docs`, enabled in all profiles |
 | Logging | Log4j2 (default Spring logging excluded) |
 | Reverse proxy | Nginx (Docker) |
 | Containerization | Docker Compose: `mysql-primary`, `mysql-replica`, `redis`, `app`, `nginx` |
@@ -90,7 +95,7 @@ Only one business domain exists today: **administrator** (auth + admin managemen
 
 | Use case | Endpoint | Purpose | R/W | Depends on (ports) | Cache keys touched | Error codes |
 | --- | --- | --- | --- | --- | --- | --- |
-| `LoginUseCase` | `POST /auth/login` | Authenticate by username/password, issue access+refresh token pair, enforce brute-force lockout | Read (`readOnly=true`) | `AdministratorRepositoryPort`, `PasswordHasher`, `TokenProvider`, `CacheAdapter` | `cacheKeyAdministratorLoginFailures` (get/set/delete), `cacheKeyAdministratorRefreshToken` (set) | `0003`, `0004`, `0013` |
+| `LoginUseCase` | `POST /auth/login` | Authenticate by username-or-email + password, issue access+refresh token pair, enforce brute-force lockout, asynchronously email a login notification | Read (`readOnly=true`) | `AdministratorRepositoryPort`, `PasswordHasher`, `TokenProvider`, `CacheAdapter`, `LoginNotificationPort` | `cacheKeyAdministratorLoginFailures` (get/set/delete), `cacheKeyAdministratorRefreshToken` (set) | `0003`, `0004`, `0013` |
 | `RegisterAdministratorUseCase` | `POST /auth/register` | Create a new admin (default `ADMIN` role, `ACTIVE`, BCrypt hash), validate username/email uniqueness | Write | `AdministratorRepositoryPort`, `RoleRepositoryPort`, `PasswordHasher` | none | `0001`, `0002` |
 | `RefreshTokenUseCase` | `POST /auth/refresh` | Validate refresh token against Redis session, rotate access+refresh pair | Read | `AdministratorRepositoryPort`, `TokenProvider`, `CacheAdapter` | `cacheKeyAdministratorRefreshToken` (get + set) | `0005` |
 | `LogoutUseCase` | `POST /auth/logout` | Delete refresh-token session, blacklist access-token jti until natural expiry | No `@Transactional` (Redis only) | `TokenProvider`, `CacheAdapter` | `cacheKeyAdministratorRefreshToken` (delete), `cacheKeyAdministratorTokenBlacklist` (set) | — |
@@ -121,11 +126,13 @@ graph LR
     TokenPort[["TokenProvider"]]
     CachePort[["CacheAdapter"]]
     PwPort[["PasswordHasher"]]
+    NotifyPort[["LoginNotificationPort"]]
 
     Login --> AdminPort
     Login --> TokenPort
     Login --> CachePort
     Login --> PwPort
+    Login -.async.-> NotifyPort
     Register --> AdminPort
     Register --> RolePort
     Register --> PwPort
@@ -146,6 +153,9 @@ graph LR
     TokenPort -.impl.-> JwtAdapter["JwtTokenProviderImpl"]
     CachePort -.impl.-> RedisAdapter["RedisAdapterImpl"]
     PwPort -.impl.-> BCryptAdapter["BCryptPasswordHasherImpl"]
+    NotifyPort -.impl.-> NotifyAdapter["LoginNotificationAdapterImpl (@Async)"]
+    NotifyAdapter --> MailPort[["MailSenderAdapter"]]
+    NotifyAdapter --> TemplatePort[["EmailTemplateRenderer"]]
 
     AdminAdapter -->|invalidates on write| PermCache(("CACHE_ADMINISTRATOR_PERMISSIONS_*"))
     Validate -.reads.-> PermCache
@@ -175,8 +185,10 @@ graph LR
 | GET | `/administrators` | `ADMINISTRATOR_READ` authority | `ListAdministratorsUseCase` |
 | PATCH | `/administrators/{id}/roles` | `ADMINISTRATOR_MANAGE` authority | `UpdateAdministratorRolesUseCase` |
 | PATCH | `/administrators/{id}/status` | `ADMIN` role | `UpdateAdministratorStatusUseCase` |
+| GET | `/v3/api-docs` | public | springdoc-openapi (generated OpenAPI 3 spec) |
+| GET | `/swagger-ui/**`, `/swagger-ui.html` | public | springdoc-openapi (Swagger UI) |
 
-Request pipeline: `SecurityConfig` (stateless, CSRF off) → `JwtAuthenticationFilter` (parses Bearer token via `ValidateAccessTokenUseCase`, sets `SecurityContextHolder`) → `@PreAuthorize` method security → controller → use case → `ResultWrapper` → `BaseController.toResponseEntity` (success = requested status; domain failure = always HTTP 400). Auth failures bypass this: no header → `RestAuthenticationEntryPoint` (401, `0008`); insufficient authority → `RestAccessDeniedHandler` (403, `0009`); invalid/blacklisted token → filter writes 401 directly.
+Request pipeline: `SecurityConfig` (stateless, CSRF off) → `JwtAuthenticationFilter` (parses Bearer token via `ValidateAccessTokenUseCase`, sets `SecurityContextHolder`) → `@PreAuthorize` method security → controller → use case → `ResultWrapper` → `BaseController.toResponseEntity` (success = requested status; domain failure = always HTTP 400). Auth failures bypass this: no header → `RestAuthenticationEntryPoint` (401, `0008`); insufficient authority → `RestAccessDeniedHandler` (403, `0009`); invalid/blacklisted token → filter writes 401 directly. `@Valid` DTO binding failures are caught by `ApiExceptionHandler.handleValidation` (400, `0002`) — this handler exists specifically so binding failures never fall through to the default resolver's `/error` forward, which is also `permitAll()` in `SecurityConfig` as defense-in-depth (a request with no credentials re-entering the filter chain on that forward would otherwise be rejected as unauthenticated, masking the real error behind a misleading 401).
 
 ---
 
@@ -199,6 +211,7 @@ Request pipeline: `SecurityConfig` (stateless, CSRF off) → `JwtAuthenticationF
 | `E-03-REDIS-0001..0005` | `RedisAdapterImpl` (infra) | Redis get/set/delete/deleteByPattern/exists failure, respectively |
 | `E-03-MAIL-0001` / `0002` | `MailSenderAdapterImpl` (infra) | `MailException` / `MessagingException` on send |
 | `E-00-CORE-0001` | `ApiExceptionHandler` | Generic unhandled `CoreException` → 500 |
+| `E-00-CORE-0002` | `ApiExceptionHandler` | `@Valid` DTO binding failure (`MethodArgumentNotValidException`) → 400; message is built dynamically from field errors, not looked up in `messages*.properties` |
 
 ---
 
@@ -217,7 +230,7 @@ Request pipeline: `SecurityConfig` (stateless, CSRF off) → `JwtAuthenticationF
 
 - **No permissions seeded**: `V1__create_auth_tables.sql` seeds only the `ADMIN` role with zero permissions. `ADMINISTRATOR_READ` / `ADMINISTRATOR_MANAGE` referenced in `@PreAuthorize` are never inserted — those endpoints are unreachable via permission until a migration or manual seed adds them.
 - **`ObjectStorageAdapter`** port exists, no implementation (e.g. MinIO/S3) yet.
-- **Email templates**: `EmailTemplateRendererImpl`/Thymeleaf config exist, but no template files exist under `infrastructure/src/main/resources/templates/` yet.
+- **Email templates**: only `email/login-notification` exists under `infrastructure/src/main/resources/templates/` so far; other flows (e.g. registration) still have no template.
 - **No `PermissionJpaRepository`**: permissions are only reachable via `RoleEntity.permissions`.
 
 ---
@@ -228,5 +241,10 @@ Whenever you add/change a use case, port, adapter, controller endpoint, cache ke
 1. Update the relevant table in this file (§3–§7).
 2. If the change adds a new cross-feature dependency (a use case now touches a port/cache key it didn't before), update the diagram in §4.
 3. If it's a new business domain (not just a new operation on `Administrator`), add a new subsection under §3 and extend §2's diagram if a new module-level dependency appears.
+4. Update `docs/architecture/architecture-map.html` to match: its `<script>` block holds the same data as plain JS objects/arrays —
+   - `modules` (module tree panels, §1–§2) — add/edit the module's `groups`/`items`, using `newItem: true` for something added this session and `gap: true` for a documented-but-unimplemented piece (mirrors §8).
+   - `graphNodes` / `graphEdges` (§4 dependency graph) — add the new use case/port/adapter node and its `uc`/`impl`/`call` edges.
+   - `endpoints` (§5), `errors` (§6), `caches` (§7) arrays — add/edit the corresponding row(s).
+   - the `#known-gaps` section's `.gap-card` markup — keep in sync with §8.
 
 This is enforced by the guardrail in `.claude/rules/implement-mode.md`.
