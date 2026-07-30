@@ -5,6 +5,7 @@ import vn.thanhnd.demo.application.base.ResultHandler;
 import vn.thanhnd.demo.application.base.ResultWrapper;
 import vn.thanhnd.demo.domain.adapter.AdministratorRepositoryPort;
 import vn.thanhnd.demo.domain.adapter.CacheAdapter;
+import vn.thanhnd.demo.domain.adapter.LoginNotificationPort;
 import vn.thanhnd.demo.domain.adapter.PasswordHasher;
 import vn.thanhnd.demo.domain.adapter.TokenProvider;
 import vn.thanhnd.demo.domain.enums.AdministratorStatus;
@@ -34,16 +35,19 @@ public class LoginUseCase {
     private final PasswordHasher passwordHasher;
     private final TokenProvider tokenProvider;
     private final CacheAdapter cacheAdapter;
+    private final LoginNotificationPort loginNotificationPort;
 
     public LoginUseCase(
             AdministratorRepositoryPort administratorRepositoryPort,
             PasswordHasher passwordHasher,
             TokenProvider tokenProvider,
-            CacheAdapter cacheAdapter) {
+            CacheAdapter cacheAdapter,
+            LoginNotificationPort loginNotificationPort) {
         this.administratorRepositoryPort = administratorRepositoryPort;
         this.passwordHasher = passwordHasher;
         this.tokenProvider = tokenProvider;
         this.cacheAdapter = cacheAdapter;
+        this.loginNotificationPort = loginNotificationPort;
     }
 
     /**
@@ -51,14 +55,15 @@ public class LoginUseCase {
      * <p>
      * Orchestrates the following steps:
      * 1. Reject the login if the account has reached the failed-attempt lockout threshold (E-01-ADMINISTRATOR-0013)
-     * 2. Find administrator by username and verify the password against the stored BCrypt hash; on mismatch, increment the failed-attempt counter in Redis and throw (E-01-ADMINISTRATOR-0003)
+     * 2. Find administrator by username or email and verify the password against the stored BCrypt hash; on mismatch, increment the failed-attempt counter in Redis and throw (E-01-ADMINISTRATOR-0003)
      * 3. Validate the account status is ACTIVE (E-01-ADMINISTRATOR-0004 otherwise)
      * 4. Reset the failed-attempt counter in Redis
      * 5. Issue a new access token and refresh token
      * 6. Store the refresh token in Redis keyed by administrator id, expiring with the token
-     * 7. Return both tokens with the access token's remaining lifetime in seconds
+     * 7. Asynchronously notify the administrator by email that a login occurred
+     * 8. Return both tokens with the access token's remaining lifetime in seconds
      *
-     * @param request LoginRequest containing username and password
+     * @param request LoginRequest containing username (or email) and password
      * @return ResultWrapper with LoginResponse on success, or the domain error code on failure
      */
     @Transactional(readOnly = true)
@@ -70,7 +75,7 @@ public class LoginUseCase {
                 throw new DomainValidationException("E-01-ADMINISTRATOR-0013");
             }
 
-            Administrator administrator = administratorRepositoryPort.findByUsername(request.username())
+            Administrator administrator = administratorRepositoryPort.findByUsernameOrEmail(request.username())
                     .filter(candidate -> passwordHasher.matches(request.password(), candidate.passwordHash()))
                     .orElseThrow(() -> {
                         int nextCount = (failures == null ? 0 : failures.attemptCount()) + 1;
@@ -96,6 +101,8 @@ public class LoginUseCase {
                     ApplicationConstants.cacheKeyAdministratorRefreshToken(administrator.id()),
                     new RefreshTokenCacheData(administrator.id(), refreshToken),
                     LocalDateTime.ofInstant(refreshClaims.expiresAt(), ZoneId.systemDefault()));
+
+            loginNotificationPort.notifyLogin(administrator);
 
             long expiresInSeconds = Duration.between(Instant.now(), accessClaims.expiresAt()).getSeconds();
             return new LoginResponse(accessToken, refreshToken, expiresInSeconds);

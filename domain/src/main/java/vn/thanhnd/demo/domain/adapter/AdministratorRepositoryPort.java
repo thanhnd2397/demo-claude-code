@@ -22,6 +22,14 @@ public interface AdministratorRepositoryPort {
     Optional<Administrator> findByUsername(String username);
 
     /**
+     * Find an administrator by exact username or exact email.
+     *
+     * @param identifier The username or email to look up
+     * @return The matching administrator, or empty if none exists
+     */
+    Optional<Administrator> findByUsernameOrEmail(String identifier);
+
+    /**
      * Find an administrator by id.
      *
      * @param id The administrator's id

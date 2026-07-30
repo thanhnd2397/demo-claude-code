@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+    <p>Xin chào <span th:text="${username}">username</span>,</p>
+    <p>Tài khoản của bạn vừa đăng nhập thành công lúc
+        <span th:text="${loginTime}">thời gian</span>.</p>
+    <p>Nếu không phải bạn, vui lòng đổi mật khẩu ngay.</p>
+</body>
+</html>

@@ -37,6 +37,12 @@ public class AdministratorRepositoryAdapterImpl implements AdministratorReposito
     }
 
     @Override
+    public Optional<Administrator> findByUsernameOrEmail(String identifier) {
+        return administratorJpaRepository.findByUsernameOrEmail(identifier, identifier)
+                .map(administratorMapper::toDomain);
+    }
+
+    @Override
     public Optional<Administrator> findById(String id) {
         return administratorJpaRepository.findById(id).map(administratorMapper::toDomain);
     }
