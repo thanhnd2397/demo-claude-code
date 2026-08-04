@@ -1,41 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>thanhnd-demo-claude — Architecture Map</title>
-<style>
-  :root {
-    --bg: #efebe0;
-    --surface: #ffffff;
-    --surface-2: #f6f2e6;
-    --ink: #202531;
-    --ink-dim: #626c7a;
-    --line: #c9c2ae;
-    --line-strong: #a79f88;
-    --shadow: rgba(32, 37, 49, 0.08);
-
-    --c-domain: #b8792a;
-    --c-domain-soft: #f1e2c9;
-    --c-application: #2f6fa3;
-    --c-application-soft: #dbe8f1;
-    --c-infrastructure: #6a5498;
-    --c-infrastructure-soft: #e6e0f0;
-    --c-presentation: #2f8a76;
-    --c-presentation-soft: #dcede8;
-    --c-util: #6b7280;
-    --c-util-soft: #e4e5e8;
-    --c-web: #4a5568;
-    --c-web-soft: #e6e8eb;
-    --c-auth: #a8503f;
-    --c-auth-soft: #f3ded8;
-
-    --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-    --sans: -apple-system, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
-  }
-
-  @media (prefers-color-scheme: dark) {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>thanhnd-demo-claude — Architecture Map</title>
+  <style>
     :root {
+      --bg: #efebe0;
+      --surface: #ffffff;
+      --surface-2: #f6f2e6;
+      --ink: #202531;
+      --ink-dim: #626c7a;
+      --line: #c9c2ae;
+      --line-strong: #a79f88;
+      --shadow: rgba(32, 37, 49, 0.08);
+
+      --c-domain: #b8792a;
+      --c-domain-soft: #f1e2c9;
+      --c-application: #2f6fa3;
+      --c-application-soft: #dbe8f1;
+      --c-infrastructure: #6a5498;
+      --c-infrastructure-soft: #e6e0f0;
+      --c-presentation: #2f8a76;
+      --c-presentation-soft: #dcede8;
+      --c-util: #6b7280;
+      --c-util-soft: #e4e5e8;
+      --c-web: #4a5568;
+      --c-web-soft: #e6e8eb;
+      --c-auth: #a8503f;
+      --c-auth-soft: #f3ded8;
+
+      --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: -apple-system, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1622;
+        --surface: #12202f;
+        --surface-2: #0f1b28;
+        --ink: #e4ecf3;
+        --ink-dim: #8aa0b5;
+        --line: #24405c;
+        --line-strong: #35577a;
+        --shadow: rgba(0, 0, 0, 0.35);
+
+        --c-domain: #e8ac52;
+        --c-domain-soft: #3a2f18;
+        --c-application: #74b7e6;
+        --c-application-soft: #17293a;
+        --c-infrastructure: #b09eea;
+        --c-infrastructure-soft: #241f3a;
+        --c-presentation: #6fd0b8;
+        --c-presentation-soft: #142a26;
+        --c-util: #a6b0bd;
+        --c-util-soft: #1b232d;
+        --c-web: #c3ccd6;
+        --c-web-soft: #1a222c;
+        --c-auth: #e0897a;
+        --c-auth-soft: #3a201d;
+      }
+    }
+
+    :root[data-theme="dark"] {
       --bg: #0d1622;
       --surface: #12202f;
       --surface-2: #0f1b28;
@@ -44,7 +72,6 @@
       --line: #24405c;
       --line-strong: #35577a;
       --shadow: rgba(0, 0, 0, 0.35);
-
       --c-domain: #e8ac52;
       --c-domain-soft: #3a2f18;
       --c-application: #74b7e6;
@@ -60,493 +87,1276 @@
       --c-auth: #e0897a;
       --c-auth-soft: #3a201d;
     }
-  }
-  :root[data-theme="dark"] {
-    --bg: #0d1622; --surface: #12202f; --surface-2: #0f1b28;
-    --ink: #e4ecf3; --ink-dim: #8aa0b5; --line: #24405c; --line-strong: #35577a;
-    --shadow: rgba(0, 0, 0, 0.35);
-    --c-domain: #e8ac52; --c-domain-soft: #3a2f18;
-    --c-application: #74b7e6; --c-application-soft: #17293a;
-    --c-infrastructure: #b09eea; --c-infrastructure-soft: #241f3a;
-    --c-presentation: #6fd0b8; --c-presentation-soft: #142a26;
-    --c-util: #a6b0bd; --c-util-soft: #1b232d;
-    --c-web: #c3ccd6; --c-web-soft: #1a222c;
-    --c-auth: #e0897a; --c-auth-soft: #3a201d;
-  }
-  :root[data-theme="light"] {
-    --bg: #efebe0; --surface: #ffffff; --surface-2: #f6f2e6;
-    --ink: #202531; --ink-dim: #626c7a; --line: #c9c2ae; --line-strong: #a79f88;
-    --shadow: rgba(32, 37, 49, 0.08);
-    --c-domain: #b8792a; --c-domain-soft: #f1e2c9;
-    --c-application: #2f6fa3; --c-application-soft: #dbe8f1;
-    --c-infrastructure: #6a5498; --c-infrastructure-soft: #e6e0f0;
-    --c-presentation: #2f8a76; --c-presentation-soft: #dcede8;
-    --c-util: #6b7280; --c-util-soft: #e4e5e8;
-    --c-web: #4a5568; --c-web-soft: #e6e8eb;
-    --c-auth: #a8503f; --c-auth-soft: #f3ded8;
-  }
 
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background:
-      radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0/22px 22px,
-      var(--bg);
-    color: var(--ink);
-    font-family: var(--sans);
-    -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-  }
-
-  .page { max-width: 1180px; margin: 0 auto; padding: 2.5rem 1.75rem 4rem; }
-
-  header.top { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem; }
-  .eyebrow {
-    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--ink-dim);
-  }
-  h1 { margin: 0; font-size: clamp(1.7rem, 2.4vw, 2.15rem); font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-  .sub { color: var(--ink-dim); font-size: 0.92rem; max-width: 68ch; line-height: 1.5; }
-  .sub code {
-    font-family: var(--mono); font-size: 0.85em; background: var(--surface-2);
-    padding: 0.05em 0.35em; border-radius: 3px; border: 1px solid var(--line);
-  }
-
-  .controls { display: flex; gap: 0.5rem; margin-top: 0.35rem; }
-  button.ctl {
-    font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--ink-dim); background: var(--surface); border: 1px solid var(--line);
-    border-radius: 5px; padding: 0.4rem 0.7rem; cursor: pointer;
-    transition: border-color 0.15s ease, color 0.15s ease;
-  }
-  button.ctl:hover { color: var(--ink); border-color: var(--line-strong); }
-  button.ctl:focus-visible, .chip:focus-visible, a:focus-visible, .panel-head:focus-visible {
-    outline: 2px solid var(--c-application); outline-offset: 2px;
-  }
-
-  /* ---- quick nav ---- */
-  .quicknav {
-    position: sticky; top: 0; z-index: 20;
-    display: flex; flex-wrap: wrap; gap: 0.3rem 1.15rem;
-    background: var(--bg); border-bottom: 1px solid var(--line);
-    padding: 0.65rem 0; margin-bottom: 2rem;
-  }
-  .quicknav a {
-    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase;
-    color: var(--ink-dim); text-decoration: none; padding: 0.2rem 0; border-bottom: 2px solid transparent;
-  }
-  .quicknav a:hover { color: var(--ink); }
-  .quicknav a.active { color: var(--ink); border-bottom-color: var(--c-application); }
-
-  .section { margin-bottom: 2.75rem; scroll-margin-top: 3.75rem; }
-  .section-head h2 { font-size: 1.18rem; margin: 0 0 0.3rem; letter-spacing: -0.01em; }
-  .section-desc { color: var(--ink-dim); font-size: 0.85rem; margin: 0 0 1.1rem; max-width: 70ch; line-height: 1.55; }
-  .section-desc code { font-family: var(--mono); font-size: 0.85em; }
-
-  /* ---- build-order spine ---- */
-  .spine-wrap {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-    padding: 1.25rem 1.25rem 1.1rem; box-shadow: 0 1px 2px var(--shadow); margin-bottom: 0.85rem;
-  }
-  .spine-label {
-    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--ink-dim); margin-bottom: 0.75rem;
-  }
-  .spine { display: flex; align-items: stretch; gap: 0; flex-wrap: wrap; row-gap: 0.85rem; }
-  .chip {
-    all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 0.2rem;
-    min-width: 132px; padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid var(--line);
-    background: var(--surface-2); position: relative;
-    transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
-  }
-  .chip:hover { transform: translateY(-1px); border-color: var(--line-strong); }
-  .chip[aria-expanded="true"] { border-color: var(--dot); box-shadow: 0 0 0 1px var(--dot) inset; background: var(--surface); }
-  .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dot); margin-bottom: 0.15rem; }
-  .chip .name { font-family: var(--mono); font-weight: 600; font-size: 0.92rem; }
-  .chip .tagline { font-size: 0.72rem; color: var(--ink-dim); line-height: 1.3; }
-  .arrow { display: flex; align-items: center; justify-content: center; color: var(--line-strong); padding: 0 0.35rem; font-family: var(--mono); font-size: 0.85rem; flex: 0 0 auto; }
-  .dep-note {
-    margin-top: 0.9rem; padding-top: 0.75rem; border-top: 1px dashed var(--line);
-    font-size: 0.78rem; color: var(--ink-dim); font-family: var(--mono); line-height: 1.55;
-  }
-  .dep-note b { color: var(--ink); font-weight: 600; }
-
-  .legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; padding: 0.85rem 1.1rem; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 0; font-size: 0.76rem; color: var(--ink-dim); }
-  .legend .item { display: flex; align-items: center; gap: 0.4rem; }
-  .legend .sw { width: 9px; height: 9px; border-radius: 2px; }
-  .legend .new-sw { width: 8px; height: 8px; border-radius: 50%; background: var(--c-presentation); box-shadow: 0 0 0 3px var(--c-presentation-soft); }
-
-  /* ---- module panels ---- */
-  .panels { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.85rem; }
-  .panel { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
-  .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem 1.1rem; cursor: pointer; background: var(--surface); border-left: 3px solid var(--dot); }
-  .panel-head-left { display: flex; align-items: baseline; gap: 0.65rem; }
-  .panel-head .mod-name { font-family: var(--mono); font-weight: 700; font-size: 1.02rem; }
-  .panel-head .mod-path { font-family: var(--mono); font-size: 0.76rem; color: var(--ink-dim); }
-  .panel-count { font-family: var(--mono); font-size: 0.72rem; color: var(--dot); background: var(--soft); border-radius: 20px; padding: 0.15rem 0.6rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .chevron { width: 9px; height: 9px; border-right: 1.5px solid var(--ink-dim); border-bottom: 1.5px solid var(--ink-dim); transform: rotate(-45deg); transition: transform 0.18s ease; flex: 0 0 auto; }
-  .panel.open .chevron { transform: rotate(45deg); }
-  .panel-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.22s ease; }
-  .panel.open .panel-body { grid-template-rows: 1fr; }
-  .panel-body-inner { overflow: hidden; }
-  .panel-purpose { padding: 0.9rem 1.1rem 0; margin: 0 0 0.6rem; font-size: 0.85rem; color: var(--ink-dim); line-height: 1.55; max-width: 68ch; }
-  .groups { padding: 0 1.1rem 1.1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.1rem 1.6rem; }
-  .group-label { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dot); margin: 0 0 0.35rem; }
-
-  ul.tree, ul.tree ul { list-style: none; margin: 0; padding-left: 1.15rem; }
-  ul.tree { padding-left: 0; }
-  ul.tree li { position: relative; padding-left: 1.15rem; padding-block: 0.28rem; font-size: 0.85rem; line-height: 1.35; }
-  ul.tree li::before { content: ""; position: absolute; top: 0; left: 0; width: 1px; height: 100%; background: var(--line); }
-  ul.tree li:last-child::before { height: 1.05rem; }
-  ul.tree li::after { content: ""; position: absolute; top: 1.05rem; left: 0; width: 0.95rem; height: 1px; background: var(--line); }
-
-  .node-name { font-family: var(--mono); font-weight: 600; color: var(--ink); }
-  .node-note { color: var(--ink-dim); font-size: 0.78rem; }
-  .badge-new { display: inline-block; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--surface); background: var(--dot); border-radius: 3px; padding: 0.02rem 0.32rem; margin-left: 0.4rem; vertical-align: middle; }
-  .badge-gap { display: inline-block; font-family: var(--mono); font-size: 0.62rem; color: var(--ink-dim); border: 1px dashed var(--line-strong); border-radius: 3px; padding: 0.02rem 0.32rem; margin-left: 0.4rem; vertical-align: middle; }
-
-  /* ---- dependency graph ---- */
-  .graph-legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin-bottom: 0.9rem; font-size: 0.78rem; color: var(--ink-dim); }
-  .gl-item { display: flex; align-items: center; gap: 0.45rem; }
-  .gl-line { width: 22px; height: 0; border-top: 2px solid; display: inline-block; }
-  .gl-uc { border-color: var(--c-application); }
-  .gl-impl { border-color: var(--c-infrastructure); border-top-style: dashed; }
-  .gl-call { border-color: var(--c-domain); border-top-style: dotted; }
-  .graph-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 1.25rem 1.5rem; }
-  .graph-canvas { position: relative; display: grid; grid-template-columns: repeat(3, minmax(220px, 1fr)); column-gap: 4.5rem; min-width: 860px; }
-  .graph-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: visible; }
-  .graph-svg path { fill: none; stroke-width: 1.3px; opacity: 0.45; transition: opacity 0.15s ease, stroke-width 0.15s ease; }
-  .graph-svg path.hl { stroke-width: 2.4px; opacity: 1; }
-  .graph-svg path.dim { opacity: 0.08; }
-  .graph-col { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 0.7rem; }
-  .col-head { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-dim); margin: 0 0 0.35rem; }
-  .col-head span { display: block; text-transform: none; letter-spacing: 0; opacity: 0.75; font-size: 0.9em; margin-top: 0.15rem; }
-  .gnode {
-    font-family: var(--mono); font-size: 0.76rem; padding: 0.42rem 0.6rem; border-radius: 6px;
-    background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--dot);
-    white-space: nowrap; cursor: pointer;
-    transition: opacity 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-  .gnode-usecase { --dot: var(--c-application); }
-  .gnode-port { --dot: var(--c-domain); }
-  .gnode-adapter { --dot: var(--c-infrastructure); }
-  .gnode-gap { border-style: dashed; color: var(--ink-dim); opacity: 0.7; }
-  .gnode.hl { border-color: var(--dot); box-shadow: 0 0 0 1px var(--dot); }
-  .gnode.dim { opacity: 0.3; }
-  .gnode:focus-visible { outline: 2px solid var(--c-application); outline-offset: 2px; }
-  .graph-hint { margin-top: 0.7rem; font-size: 0.76rem; color: var(--ink-dim); font-style: italic; }
-  .graph-notes { margin-top: 1rem; padding: 0.9rem 1.1rem; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; font-size: 0.82rem; color: var(--ink-dim); line-height: 1.6; }
-  .graph-notes b { color: var(--ink); font-weight: 600; }
-  .graph-notes ul { margin: 0.35rem 0 0; padding-left: 1.1rem; }
-
-  /* ---- pipeline ---- */
-  .pipeline-flow { display: flex; align-items: center; flex-wrap: wrap; gap: 0.15rem; }
-  .pstep { font-family: var(--mono); font-size: 0.78rem; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; padding: 0.5rem 0.75rem; }
-  .parrow { color: var(--line-strong); padding: 0 0.4rem; font-family: var(--mono); font-size: 0.85rem; }
-  .pipeline-branches { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.75rem; margin-top: 1.1rem; }
-  .branch-card { border: 1px solid var(--line); border-left: 3px solid var(--c-auth); border-radius: 8px; padding: 0.7rem 0.9rem; background: var(--surface); font-size: 0.82rem; color: var(--ink-dim); line-height: 1.5; }
-  .branch-card .status { font-family: var(--mono); font-weight: 700; color: var(--ink); }
-  .branch-card .code { font-family: var(--mono); font-size: 0.72rem; color: var(--c-auth); }
-
-  /* ---- tables ---- */
-  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
-  table.ref-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
-  table.ref-table th { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-dim); text-align: left; padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
-  table.ref-table td { padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.45; }
-  table.ref-table tr:last-child td { border-bottom: none; }
-  table.ref-table .mono { font-family: var(--mono); font-size: 0.85em; }
-
-  .pill { display: inline-block; font-family: var(--mono); font-size: 0.68rem; padding: 0.16rem 0.55rem; border-radius: 20px; white-space: nowrap; }
-  .pill-public { background: var(--surface-2); color: var(--ink-dim); border: 1px solid var(--line); }
-  .pill-auth { background: var(--c-auth-soft); color: var(--c-auth); border: 1px solid var(--c-auth); }
-  .layer-tag { display: inline-block; font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.4rem; border-radius: 4px; margin-right: 0.4rem; white-space: nowrap; }
-  .layer-application { background: var(--c-application-soft); color: var(--c-application); }
-  .layer-infrastructure { background: var(--c-infrastructure-soft); color: var(--c-infrastructure); }
-  .layer-presentation { background: var(--c-presentation-soft); color: var(--c-presentation); }
-
-  /* ---- cache cards ---- */
-  .cache-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.9rem; margin-bottom: 1.1rem; }
-  .cache-card { border: 1px solid var(--line); border-radius: 10px; padding: 0.9rem 1rem; background: var(--surface); }
-  .cache-card .key { font-family: var(--mono); font-size: 0.76rem; color: var(--ink); background: var(--surface-2); padding: 0.18rem 0.45rem; border-radius: 4px; display: inline-block; margin-bottom: 0.55rem; word-break: break-word; }
-  .cache-card .flow-row { display: flex; gap: 0.5rem; font-size: 0.78rem; color: var(--ink-dim); margin-top: 0.32rem; line-height: 1.4; }
-  .cache-card .flow-row b { color: var(--ink); font-weight: 600; min-width: 66px; flex: 0 0 auto; }
-
-  /* ---- gaps ---- */
-  .gap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.9rem; }
-  .gap-card { border: 1px dashed var(--line-strong); border-radius: 10px; padding: 0.85rem 1rem; background: var(--surface-2); font-size: 0.83rem; color: var(--ink-dim); line-height: 1.55; }
-  .gap-card .gtitle { font-family: var(--mono); font-weight: 700; color: var(--ink); font-size: 0.82rem; display: block; margin-bottom: 0.3rem; }
-
-  footer.deploy { margin-top: 0.5rem; display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; padding: 0.9rem 1.1rem; border: 1px dashed var(--line-strong); border-radius: 8px; color: var(--ink-dim); font-size: 0.8rem; }
-  footer.deploy .lbl { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
-  footer.deploy .svcs { font-family: var(--mono); font-size: 0.78rem; }
-
-  @media (max-width: 640px) {
-    .arrow { display: none; }
-    .spine { flex-direction: column; }
-    .chip { width: 100%; }
-  }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-</style>
-</head>
-<body>
-<div class="page">
-  <header class="top">
-    <div class="eyebrow">architecture map · generated from docs/architecture/project-overview.md</div>
-    <h1>thanhnd&#8209;demo&#8209;claude</h1>
-    <p class="sub">Java 25 · Spring Boot 4.0.1 · Clean Architecture, 6 Maven modules. Module tree, the live port↔adapter dependency graph, the request pipeline, and every endpoint / error code / cache key currently in the codebase.</p>
-  </header>
-
-  <nav class="quicknav" aria-label="Section navigation">
-    <a href="#modules">Modules</a>
-    <a href="#dependency-graph">Dependency graph</a>
-    <a href="#request-pipeline">Request pipeline</a>
-    <a href="#endpoints">Endpoints</a>
-    <a href="#error-codes">Error codes</a>
-    <a href="#cache-keys">Cache keys</a>
-    <a href="#known-gaps">Known gaps</a>
-  </nav>
-
-  <section id="modules" class="section">
-    <div class="section-head">
-      <h2>Module tree</h2>
-      <p class="section-desc">Six Maven modules, listed in reactor build order. Click a module to unfold its packages and classes.</p>
-    </div>
-    <div class="controls">
-      <button class="ctl" id="expandAll">Expand all</button>
-      <button class="ctl" id="collapseAll">Collapse all</button>
-    </div>
-    <div class="spine-wrap" style="margin-top: 0.85rem;">
-      <div class="spine-label">Maven reactor / build order</div>
-      <div class="spine" id="spine"></div>
-      <div class="dep-note">
-        <b>Dependency Rule</b> (independent of build order): presentation → application → domain ← infrastructure (infrastructure implements domain's ports). <b>domain</b> depends on nothing else; <b>util</b> is a leaf shared by every layer.
-      </div>
-    </div>
-    <div class="legend" id="legend" style="margin-top: 0.85rem;"></div>
-    <div class="panels" id="panels"></div>
-  </section>
-
-  <section id="dependency-graph" class="section">
-    <div class="section-head">
-      <h2>Cross-feature dependency graph</h2>
-      <p class="section-desc">Which use case reaches which port, and which adapter answers it. Mirrors §4 of <code>project-overview.md</code>.</p>
-    </div>
-    <div class="graph-legend">
-      <span class="gl-item"><span class="gl-line gl-uc"></span>use case → port</span>
-      <span class="gl-item"><span class="gl-line gl-impl"></span>port implemented by adapter</span>
-      <span class="gl-item"><span class="gl-line gl-call"></span>adapter calls another port directly</span>
-    </div>
-    <p class="graph-hint">Hover or click a node to isolate its connections — click it again (or click empty space) to release.</p>
-    <div class="graph-scroll" id="graphScroll">
-      <div class="graph-canvas" id="graphCanvas">
-        <svg id="graphSvg" class="graph-svg"></svg>
-        <div class="graph-col" data-col="usecase">
-          <p class="col-head">Use cases<span>application/usecase/administrator/</span></p>
-        </div>
-        <div class="graph-col" data-col="port">
-          <p class="col-head">Ports<span>domain/adapter/ (interfaces)</span></p>
-        </div>
-        <div class="graph-col" data-col="adapter">
-          <p class="col-head">Adapters<span>infrastructure/adapter/ (impls)</span></p>
-        </div>
-      </div>
-    </div>
-    <div class="graph-notes">
-      <b>Coupling to remember when adding a feature:</b>
-      <ul>
-        <li>Anything that changes an <code>Administrator</code>'s roles or status must invalidate <code>cacheKeyAdministratorPermissions</code> (already done in <code>AdministratorRepositoryAdapterImpl</code>) — otherwise authorization uses stale data for up to 15 minutes.</li>
-        <li>Anything that revokes access (delete/deactivate, force logout) should blacklist the current jti the same way <code>LogoutUseCase</code> does.</li>
-        <li><code>ValidateAccessTokenUseCase</code> runs on <b>every</b> authenticated request — it is a hot path; prefer cache reads over DB there.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section id="request-pipeline" class="section">
-    <div class="section-head">
-      <h2>Request pipeline</h2>
-      <p class="section-desc">What an authenticated call passes through before reaching a use case, and where it can be rejected instead.</p>
-    </div>
-    <div class="pipeline-flow" id="pipelineFlow"></div>
-    <div class="pipeline-branches">
-      <div class="branch-card">
-        <span class="status">401 Unauthorized</span><br>
-        No <code>Authorization</code> header on a protected endpoint → <span class="code">RestAuthenticationEntryPoint</span> · <span class="code">E-01-ADMINISTRATOR-0008</span>
-      </div>
-      <div class="branch-card">
-        <span class="status">403 Forbidden</span><br>
-        Authenticated but missing the required role/authority → <span class="code">RestAccessDeniedHandler</span> · <span class="code">E-01-ADMINISTRATOR-0009</span>
-      </div>
-      <div class="branch-card">
-        <span class="status">401 Unauthorized</span><br>
-        Invalid, expired, or blacklisted token → <span class="code">JwtAuthenticationFilter</span> writes 401 directly (no handler hop)
-      </div>
-    </div>
-  </section>
-
-  <section id="endpoints" class="section">
-    <div class="section-head">
-      <h2>HTTP endpoints</h2>
-      <p class="section-desc">All paths are relative to <code>/api/v1</code> (<code>server.servlet.context-path</code>).</p>
-    </div>
-    <div class="table-scroll">
-      <table class="ref-table" id="endpointsTable">
-        <thead><tr><th>Method</th><th>Path</th><th>Auth</th><th>Use case</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section id="error-codes" class="section">
-    <div class="section-head">
-      <h2>Error code reference</h2>
-      <p class="section-desc">Format <code>E-{layer}-{ENTITY}-{sequence}</code>. Layer of the thrower shown as a tag.</p>
-    </div>
-    <div class="table-scroll">
-      <table class="ref-table" id="errorTable">
-        <thead><tr><th>Code</th><th>Thrown by</th><th>Meaning</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section id="cache-keys" class="section">
-    <div class="section-head">
-      <h2>Cache keys</h2>
-      <p class="section-desc">Redis, cache-aside: checked first on reads, invalidated on writes.</p>
-    </div>
-    <div class="cache-grid" id="cacheGrid"></div>
-    <div class="table-scroll">
-      <table class="ref-table" id="cacheTable">
-        <thead><tr><th>Helper</th><th>Redis key format</th><th>Written by</th><th>Read by</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section id="known-gaps" class="section">
-    <div class="section-head">
-      <h2>Known gaps</h2>
-      <p class="section-desc">Not bugs to silently fix — context for future work.</p>
-    </div>
-    <div class="gap-grid">
-      <div class="gap-card"><span class="gtitle">No permissions seeded</span><code>V1__create_auth_tables.sql</code> seeds only the <code>ADMIN</code> role with zero permissions. <code>ADMINISTRATOR_READ</code> / <code>ADMINISTRATOR_MANAGE</code> referenced in <code>@PreAuthorize</code> are never inserted — those endpoints are unreachable via permission until a migration or manual seed adds them.</div>
-      <div class="gap-card"><span class="gtitle">ObjectStorageAdapter has no implementation</span>Port exists in domain, no adapter (e.g. MinIO/S3) wired up yet.</div>
-      <div class="gap-card"><span class="gtitle">Only one email template exists</span><code>email/login-notification</code> is the only template under <code>infrastructure/src/main/resources/templates/</code> so far — other flows (e.g. registration) still have none.</div>
-      <div class="gap-card"><span class="gtitle">No PermissionJpaRepository</span>Permissions are only reachable via <code>RoleEntity.permissions</code>.</div>
-    </div>
-  </section>
-
-  <footer class="deploy">
-    <span class="lbl">deploy · docker compose</span>
-    <span class="svcs">mysql-primary · mysql-replica · redis · app · nginx</span>
-  </footer>
-</div>
-
-<script>
-  /* ============ 1. module tree (spine + panels) ============ */
-  const modules = [
-    { key: "util", path: "util/", tagline: "Shared constants, helpers, base exceptions",
-      purpose: "No business logic — constants, response wrappers, and the base exception every layer above is allowed to depend on.",
-      groups: [
-        { label: "constant/", items: [ { name: "ApplicationConstants", note: "cache-key helpers, formats" } ] },
-        { label: "response/", items: [ { name: "ResponseMaker" }, { name: "RestResponse" } ] },
-        { label: "exception/", items: [ { name: "CoreException", note: "base for all thrown exceptions" } ] },
-        { label: "annotation/", items: [ { name: "@UseCase" }, { name: "@Adapter" } ] },
-      ] },
-    { key: "domain", path: "domain/", tagline: "Business rules, models, ports — the core",
-      purpose: "Immutable records only, no framework annotations. Everything above implements or calls into this layer; this layer calls into nothing but util.",
-      groups: [
-        { label: "adapter/ (ports)", items: [
-          { name: "AdministratorRepositoryPort" }, { name: "RoleRepositoryPort" }, { name: "TokenProvider" },
-          { name: "CacheAdapter" }, { name: "PasswordHasher" },
-          { name: "LoginNotificationPort", newItem: true, note: "notifyLogin(administrator)" },
-          { name: "MailSenderAdapter" }, { name: "EmailTemplateRenderer" },
-          { name: "ObjectStorageAdapter", gap: true, note: "no implementation yet" },
-        ] },
-        { label: "model/", items: [
-          { name: "Administrator" }, { name: "MailMessage" }, { name: "TokenClaims" },
-          { name: "RefreshTokenCacheData" }, { name: "LoginFailureCacheData" }, { name: "AdministratorPermissionsCacheData" },
-        ] },
-        { label: "enums/", items: [ { name: "AdministratorStatus" } ] },
-        { label: "exception/", items: [ { name: "DomainValidationException", note: "E-{layer}-{ENTITY}-{seq}" } ] },
-      ] },
-    { key: "application", path: "application/", tagline: "Use cases — one business operation each",
-      purpose: "Orchestrates domain ports behind a single public method per use case; command use cases return ResultWrapper instead of throwing.",
-      groups: [
-        { label: "usecase/administrator/", items: [
-          { name: "LoginUseCase", note: "username or email + password → tokens, async mail" },
-          { name: "RegisterAdministratorUseCase" }, { name: "RefreshTokenUseCase" }, { name: "LogoutUseCase" },
-          { name: "ValidateAccessTokenUseCase", note: "hot path — every request" },
-          { name: "ListAdministratorsUseCase" }, { name: "UpdateAdministratorRolesUseCase" }, { name: "UpdateAdministratorStatusUseCase" },
-        ] },
-        { label: "base/", items: [ { name: "ResultWrapper<T>" }, { name: "ResultHandler" } ] },
-        { label: "dto/", items: [ { name: "LoginRequest / LoginResponse" }, { name: "…and per-use-case records" } ] },
-      ] },
-    { key: "infrastructure", path: "infrastructure/", tagline: "Adapters, JPA, cache, migrations",
-      purpose: "Implements every domain port. JPA entities, MapStruct mappers, Redis and mail adapters, Flyway migrations, Spring config beans.",
-      groups: [
-        { label: "adapter/ (impls)", items: [
-          { name: "AdministratorRepositoryAdapterImpl" }, { name: "RoleRepositoryAdapterImpl" }, { name: "JwtTokenProviderImpl" },
-          { name: "RedisAdapterImpl" }, { name: "BCryptPasswordHasherImpl" },
-          { name: "LoginNotificationAdapterImpl", newItem: true, note: "@Async — fire-and-forget" },
-          { name: "MailSenderAdapterImpl" }, { name: "EmailTemplateRendererImpl" },
-        ] },
-        { label: "persistence/", items: [ { name: "entity/", note: "AdministratorEntity, RoleEntity…" }, { name: "repository/", note: "AdministratorJpaRepository…" } ] },
-        { label: "resources/", items: [ { name: "db/migration/", note: "Flyway — V1__create_auth_tables.sql" }, { name: "templates/email/login-notification.html", newItem: true } ] },
-        { label: "config/", items: [ { name: "EmailTemplateConfiguration" }, { name: "AsyncConfiguration", newItem: true, note: "@EnableAsync — first async usage" }, { name: "RedisConfiguration" } ] },
-      ] },
-    { key: "presentation", path: "presentation/", tagline: "HTTP layer — controllers, filters, security",
-      purpose: "Everything that touches the servlet request/response cycle: REST controllers, the JWT filter, Spring Security config, exception handlers.",
-      groups: [
-        { label: "api/", items: [ { name: "AuthController" }, { name: "AdministratorController" } ] },
-        { label: "filter/", items: [ { name: "JwtAuthenticationFilter" } ] },
-        { label: "config/", items: [ { name: "SecurityConfig", note: "permits /error — an unhandled MVC exception forwards there, re-entering the filter chain" }, { name: "OpenApiConfig", newItem: true, note: "bearerAuth JWT security scheme for springdoc" } ] },
-        { label: "handler/", items: [ { name: "ApiExceptionHandler", note: "+ MethodArgumentNotValidException → 400 E-00-CORE-0002" }, { name: "RestAuthenticationEntryPoint", note: "401 · no Authorization header" }, { name: "RestAccessDeniedHandler", note: "403 · missing authority" } ] },
-      ] },
-    { key: "web", path: "web/", tagline: "Application entry point",
-      purpose: "Thin wrapper: the Spring Boot main class and per-profile application properties.",
-      groups: [
-        { label: "root", items: [ { name: "DemoApplication.java" } ] },
-        { label: "resources/", items: [ { name: "application-{local,test,prod}.properties" } ] },
-      ] },
-  ];
-
-  const spine = document.getElementById("spine");
-  modules.forEach((m, i) => {
-    if (i > 0) {
-      const arrow = document.createElement("div");
-      arrow.className = "arrow"; arrow.textContent = "→"; arrow.setAttribute("aria-hidden", "true");
-      spine.appendChild(arrow);
+    :root[data-theme="light"] {
+      --bg: #efebe0;
+      --surface: #ffffff;
+      --surface-2: #f6f2e6;
+      --ink: #202531;
+      --ink-dim: #626c7a;
+      --line: #c9c2ae;
+      --line-strong: #a79f88;
+      --shadow: rgba(32, 37, 49, 0.08);
+      --c-domain: #b8792a;
+      --c-domain-soft: #f1e2c9;
+      --c-application: #2f6fa3;
+      --c-application-soft: #dbe8f1;
+      --c-infrastructure: #6a5498;
+      --c-infrastructure-soft: #e6e0f0;
+      --c-presentation: #2f8a76;
+      --c-presentation-soft: #dcede8;
+      --c-util: #6b7280;
+      --c-util-soft: #e4e5e8;
+      --c-web: #4a5568;
+      --c-web-soft: #e6e8eb;
+      --c-auth: #a8503f;
+      --c-auth-soft: #f3ded8;
     }
-    const chip = document.createElement("button");
-    chip.className = "chip";
-    chip.style.setProperty("--dot", `var(--c-${m.key})`);
-    chip.setAttribute("aria-expanded", "false");
-    chip.setAttribute("data-target", m.key);
-    chip.innerHTML = `<span class="dot"></span><span class="name">${m.path}</span><span class="tagline">${m.tagline}</span>`;
-    chip.addEventListener("click", () => togglePanel(m.key));
-    spine.appendChild(chip);
-  });
 
-  function renderItems(items) {
-    return items.map(it => `
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0/22px 22px,
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 2.5rem 1.75rem 4rem;
+    }
+
+    header.top {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 2.4vw, 2.15rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
+    }
+
+    .sub {
+      color: var(--ink-dim);
+      font-size: 0.92rem;
+      max-width: 68ch;
+      line-height: 1.5;
+    }
+
+    .sub code {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      background: var(--surface-2);
+      padding: 0.05em 0.35em;
+      border-radius: 3px;
+      border: 1px solid var(--line);
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.35rem;
+    }
+
+    button.ctl {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 0.4rem 0.7rem;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+
+    button.ctl:hover {
+      color: var(--ink);
+      border-color: var(--line-strong);
+    }
+
+    button.ctl:focus-visible,
+    .chip:focus-visible,
+    a:focus-visible,
+    .panel-head:focus-visible {
+      outline: 2px solid var(--c-application);
+      outline-offset: 2px;
+    }
+
+    /* ---- quick nav ---- */
+    .quicknav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 1.15rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      padding: 0.65rem 0;
+      margin-bottom: 2rem;
+    }
+
+    .quicknav a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      text-decoration: none;
+      padding: 0.2rem 0;
+      border-bottom: 2px solid transparent;
+    }
+
+    .quicknav a:hover {
+      color: var(--ink);
+    }
+
+    .quicknav a.active {
+      color: var(--ink);
+      border-bottom-color: var(--c-application);
+    }
+
+    .section {
+      margin-bottom: 2.75rem;
+      scroll-margin-top: 3.75rem;
+    }
+
+    .section-head h2 {
+      font-size: 1.18rem;
+      margin: 0 0 0.3rem;
+      letter-spacing: -0.01em;
+    }
+
+    .section-desc {
+      color: var(--ink-dim);
+      font-size: 0.85rem;
+      margin: 0 0 1.1rem;
+      max-width: 70ch;
+      line-height: 1.55;
+    }
+
+    .section-desc code {
+      font-family: var(--mono);
+      font-size: 0.85em;
+    }
+
+    /* ---- build-order spine ---- */
+    .spine-wrap {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1.25rem 1.25rem 1.1rem;
+      box-shadow: 0 1px 2px var(--shadow);
+      margin-bottom: 0.85rem;
+    }
+
+    .spine-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      margin-bottom: 0.75rem;
+    }
+
+    .spine {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      flex-wrap: wrap;
+      row-gap: 0.85rem;
+    }
+
+    .chip {
+      all: unset;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-width: 132px;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      position: relative;
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+    }
+
+    .chip[aria-expanded="true"] {
+      border-color: var(--dot);
+      box-shadow: 0 0 0 1px var(--dot) inset;
+      background: var(--surface);
+    }
+
+    .chip .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--dot);
+      margin-bottom: 0.15rem;
+    }
+
+    .chip .name {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .chip .tagline {
+      font-size: 0.72rem;
+      color: var(--ink-dim);
+      line-height: 1.3;
+    }
+
+    .arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--line-strong);
+      padding: 0 0.35rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      flex: 0 0 auto;
+    }
+
+    .dep-note {
+      margin-top: 0.9rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--line);
+      font-size: 0.78rem;
+      color: var(--ink-dim);
+      font-family: var(--mono);
+      line-height: 1.55;
+    }
+
+    .dep-note b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.1rem;
+      padding: 0.85rem 1.1rem;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-bottom: 0;
+      font-size: 0.76rem;
+      color: var(--ink-dim);
+    }
+
+    .legend .item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .legend .sw {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+    }
+
+    .legend .new-sw {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--c-presentation);
+      box-shadow: 0 0 0 3px var(--c-presentation-soft);
+    }
+
+    /* ---- module panels ---- */
+    .panels {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.85rem;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 1.1rem;
+      cursor: pointer;
+      background: var(--surface);
+      border-left: 3px solid var(--dot);
+    }
+
+    .panel-head-left {
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+    }
+
+    .panel-head .mod-name {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 1.02rem;
+    }
+
+    .panel-head .mod-path {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink-dim);
+    }
+
+    .panel-count {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--dot);
+      background: var(--soft);
+      border-radius: 20px;
+      padding: 0.15rem 0.6rem;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .chevron {
+      width: 9px;
+      height: 9px;
+      border-right: 1.5px solid var(--ink-dim);
+      border-bottom: 1.5px solid var(--ink-dim);
+      transform: rotate(-45deg);
+      transition: transform 0.18s ease;
+      flex: 0 0 auto;
+    }
+
+    .panel.open .chevron {
+      transform: rotate(45deg);
+    }
+
+    .panel-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.22s ease;
+    }
+
+    .panel.open .panel-body {
+      grid-template-rows: 1fr;
+    }
+
+    .panel-body-inner {
+      overflow: hidden;
+    }
+
+    .panel-purpose {
+      padding: 0.9rem 1.1rem 0;
+      margin: 0 0 0.6rem;
+      font-size: 0.85rem;
+      color: var(--ink-dim);
+      line-height: 1.55;
+      max-width: 68ch;
+    }
+
+    .groups {
+      padding: 0 1.1rem 1.1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.1rem 1.6rem;
+    }
+
+    .group-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--dot);
+      margin: 0 0 0.35rem;
+    }
+
+    ul.tree,
+    ul.tree ul {
+      list-style: none;
+      margin: 0;
+      padding-left: 1.15rem;
+    }
+
+    ul.tree {
+      padding-left: 0;
+    }
+
+    ul.tree li {
+      position: relative;
+      padding-left: 1.15rem;
+      padding-block: 0.28rem;
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    ul.tree li::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 100%;
+      background: var(--line);
+    }
+
+    ul.tree li:last-child::before {
+      height: 1.05rem;
+    }
+
+    ul.tree li::after {
+      content: "";
+      position: absolute;
+      top: 1.05rem;
+      left: 0;
+      width: 0.95rem;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .node-name {
+      font-family: var(--mono);
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .node-note {
+      color: var(--ink-dim);
+      font-size: 0.78rem;
+    }
+
+    .badge-new {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.05em;
+      color: var(--surface);
+      background: var(--dot);
+      border-radius: 3px;
+      padding: 0.02rem 0.32rem;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+
+    .badge-gap {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--ink-dim);
+      border: 1px dashed var(--line-strong);
+      border-radius: 3px;
+      padding: 0.02rem 0.32rem;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+
+    /* ---- dependency graph ---- */
+    .graph-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.4rem;
+      margin-bottom: 0.9rem;
+      font-size: 0.78rem;
+      color: var(--ink-dim);
+    }
+
+    .gl-item {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .gl-line {
+      width: 22px;
+      height: 0;
+      border-top: 2px solid;
+      display: inline-block;
+    }
+
+    .gl-uc {
+      border-color: var(--c-application);
+    }
+
+    .gl-impl {
+      border-color: var(--c-infrastructure);
+      border-top-style: dashed;
+    }
+
+    .gl-call {
+      border-color: var(--c-domain);
+      border-top-style: dotted;
+    }
+
+    .graph-scroll {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .graph-canvas {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      column-gap: 4.5rem;
+      min-width: 860px;
+    }
+
+    .graph-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: visible;
+    }
+
+    .graph-svg path {
+      fill: none;
+      stroke-width: 1.3px;
+      opacity: 0.45;
+      transition: opacity 0.15s ease, stroke-width 0.15s ease;
+    }
+
+    .graph-svg path.hl {
+      stroke-width: 2.4px;
+      opacity: 1;
+    }
+
+    .graph-svg path.dim {
+      opacity: 0.08;
+    }
+
+    .graph-col {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .col-head {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-dim);
+      margin: 0 0 0.35rem;
+    }
+
+    .col-head span {
+      display: block;
+      text-transform: none;
+      letter-spacing: 0;
+      opacity: 0.75;
+      font-size: 0.9em;
+      margin-top: 0.15rem;
+    }
+
+    .gnode {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      padding: 0.42rem 0.6rem;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--dot);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: opacity 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .gnode-usecase {
+      --dot: var(--c-application);
+    }
+
+    .gnode-port {
+      --dot: var(--c-domain);
+    }
+
+    .gnode-adapter {
+      --dot: var(--c-infrastructure);
+    }
+
+    .gnode-gap {
+      border-style: dashed;
+      color: var(--ink-dim);
+      opacity: 0.7;
+    }
+
+    .gnode.hl {
+      border-color: var(--dot);
+      box-shadow: 0 0 0 1px var(--dot);
+    }
+
+    .gnode.dim {
+      opacity: 0.3;
+    }
+
+    .gnode:focus-visible {
+      outline: 2px solid var(--c-application);
+      outline-offset: 2px;
+    }
+
+    .graph-hint {
+      margin-top: 0.7rem;
+      font-size: 0.76rem;
+      color: var(--ink-dim);
+      font-style: italic;
+    }
+
+    .graph-notes {
+      margin-top: 1rem;
+      padding: 0.9rem 1.1rem;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: var(--ink-dim);
+      line-height: 1.6;
+    }
+
+    .graph-notes b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .graph-notes ul {
+      margin: 0.35rem 0 0;
+      padding-left: 1.1rem;
+    }
+
+    /* ---- pipeline ---- */
+    .pipeline-flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.15rem;
+    }
+
+    .pstep {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .parrow {
+      color: var(--line-strong);
+      padding: 0 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+    }
+
+    .pipeline-branches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.1rem;
+    }
+
+    .branch-card {
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--c-auth);
+      border-radius: 8px;
+      padding: 0.7rem 0.9rem;
+      background: var(--surface);
+      font-size: 0.82rem;
+      color: var(--ink-dim);
+      line-height: 1.5;
+    }
+
+    .branch-card .status {
+      font-family: var(--mono);
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .branch-card .code {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--c-auth);
+    }
+
+    /* ---- tables ---- */
+    .table-scroll {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+    }
+
+    table.ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+    }
+
+    table.ref-table th {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-dim);
+      text-align: left;
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--line-strong);
+      white-space: nowrap;
+    }
+
+    table.ref-table td {
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      line-height: 1.45;
+    }
+
+    table.ref-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.ref-table .mono {
+      font-family: var(--mono);
+      font-size: 0.85em;
+    }
+
+    .pill {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 0.16rem 0.55rem;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .pill-public {
+      background: var(--surface-2);
+      color: var(--ink-dim);
+      border: 1px solid var(--line);
+    }
+
+    .pill-auth {
+      background: var(--c-auth-soft);
+      color: var(--c-auth);
+      border: 1px solid var(--c-auth);
+    }
+
+    .layer-tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      margin-right: 0.4rem;
+      white-space: nowrap;
+    }
+
+    .layer-application {
+      background: var(--c-application-soft);
+      color: var(--c-application);
+    }
+
+    .layer-infrastructure {
+      background: var(--c-infrastructure-soft);
+      color: var(--c-infrastructure);
+    }
+
+    .layer-presentation {
+      background: var(--c-presentation-soft);
+      color: var(--c-presentation);
+    }
+
+    /* ---- cache cards ---- */
+    .cache-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .cache-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      background: var(--surface);
+    }
+
+    .cache-card .key {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink);
+      background: var(--surface-2);
+      padding: 0.18rem 0.45rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 0.55rem;
+      word-break: break-word;
+    }
+
+    .cache-card .flow-row {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--ink-dim);
+      margin-top: 0.32rem;
+      line-height: 1.4;
+    }
+
+    .cache-card .flow-row b {
+      color: var(--ink);
+      font-weight: 600;
+      min-width: 66px;
+      flex: 0 0 auto;
+    }
+
+    /* ---- gaps ---- */
+    .gap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .gap-card {
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      background: var(--surface-2);
+      font-size: 0.83rem;
+      color: var(--ink-dim);
+      line-height: 1.55;
+    }
+
+    .gap-card .gtitle {
+      font-family: var(--mono);
+      font-weight: 700;
+      color: var(--ink);
+      font-size: 0.82rem;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    footer.deploy {
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+      padding: 0.9rem 1.1rem;
+      border: 1px dashed var(--line-strong);
+      border-radius: 8px;
+      color: var(--ink-dim);
+      font-size: 0.8rem;
+    }
+
+    footer.deploy .lbl {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    footer.deploy .svcs {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 640px) {
+      .arrow {
+        display: none;
+      }
+
+      .spine {
+        flex-direction: column;
+      }
+
+      .chip {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="top">
+      <div class="eyebrow">architecture map · generated from docs/architecture/project-overview.md</div>
+      <h1>thanhnd&#8209;demo&#8209;claude</h1>
+      <p class="sub">Java 25 · Spring Boot 4.0.1 · Clean Architecture, 6 Maven modules. Module tree, the live
+        port↔adapter dependency graph, the request pipeline, and every endpoint / error code / cache key currently in
+        the codebase.</p>
+    </header>
+
+    <nav class="quicknav" aria-label="Section navigation">
+      <a href="#modules">Modules</a>
+      <a href="#dependency-graph">Dependency graph</a>
+      <a href="#request-pipeline">Request pipeline</a>
+      <a href="#endpoints">Endpoints</a>
+      <a href="#error-codes">Error codes</a>
+      <a href="#cache-keys">Cache keys</a>
+      <a href="#known-gaps">Known gaps</a>
+    </nav>
+
+    <section id="modules" class="section">
+      <div class="section-head">
+        <h2>Module tree</h2>
+        <p class="section-desc">Six Maven modules, listed in reactor build order. Click a module to unfold its packages
+          and classes.</p>
+      </div>
+      <div class="controls">
+        <button class="ctl" id="expandAll">Expand all</button>
+        <button class="ctl" id="collapseAll">Collapse all</button>
+      </div>
+      <div class="spine-wrap" style="margin-top: 0.85rem;">
+        <div class="spine-label">Maven reactor / build order</div>
+        <div class="spine" id="spine"></div>
+        <div class="dep-note">
+          <b>Dependency Rule</b> (independent of build order): presentation → application → domain ← infrastructure
+          (infrastructure implements domain's ports). <b>domain</b> depends on nothing else; <b>util</b> is a leaf
+          shared by every layer.
+        </div>
+      </div>
+      <div class="legend" id="legend" style="margin-top: 0.85rem;"></div>
+      <div class="panels" id="panels"></div>
+    </section>
+
+    <section id="dependency-graph" class="section">
+      <div class="section-head">
+        <h2>Cross-feature dependency graph</h2>
+        <p class="section-desc">Which use case reaches which port, and which adapter answers it. Mirrors §4 of
+          <code>project-overview.md</code>.
+        </p>
+      </div>
+      <div class="graph-legend">
+        <span class="gl-item"><span class="gl-line gl-uc"></span>use case → port</span>
+        <span class="gl-item"><span class="gl-line gl-impl"></span>port implemented by adapter</span>
+        <span class="gl-item"><span class="gl-line gl-call"></span>adapter calls another port directly</span>
+      </div>
+      <p class="graph-hint">Hover or click a node to isolate its connections — click it again (or click empty space) to
+        release.</p>
+      <div class="graph-scroll" id="graphScroll">
+        <div class="graph-canvas" id="graphCanvas">
+          <svg id="graphSvg" class="graph-svg"></svg>
+          <div class="graph-col" data-col="usecase">
+            <p class="col-head">Use cases<span>application/usecase/administrator/</span></p>
+          </div>
+          <div class="graph-col" data-col="port">
+            <p class="col-head">Ports<span>domain/adapter/ (interfaces)</span></p>
+          </div>
+          <div class="graph-col" data-col="adapter">
+            <p class="col-head">Adapters<span>infrastructure/adapter/ (impls)</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="graph-notes">
+        <b>Coupling to remember when adding a feature:</b>
+        <ul>
+          <li>Anything that changes an <code>Administrator</code>'s roles or status must invalidate
+            <code>cacheKeyAdministratorPermissions</code> (already done in
+            <code>AdministratorRepositoryAdapterImpl</code>) — otherwise authorization uses stale data for up to 15
+            minutes.
+          </li>
+          <li>Anything that revokes access (delete/deactivate, force logout) should blacklist the current jti the same
+            way <code>LogoutUseCase</code> does.</li>
+          <li><code>ValidateAccessTokenUseCase</code> runs on <b>every</b> authenticated request — it is a hot path;
+            prefer cache reads over DB there.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="request-pipeline" class="section">
+      <div class="section-head">
+        <h2>Request pipeline</h2>
+        <p class="section-desc">What an authenticated call passes through before reaching a use case, and where it can
+          be rejected instead.</p>
+      </div>
+      <div class="pipeline-flow" id="pipelineFlow"></div>
+      <div class="pipeline-branches">
+        <div class="branch-card">
+          <span class="status">401 Unauthorized</span><br>
+          No <code>Authorization</code> header on a protected endpoint → <span
+            class="code">RestAuthenticationEntryPoint</span> · <span class="code">E-01-ADMINISTRATOR-0008</span>
+        </div>
+        <div class="branch-card">
+          <span class="status">403 Forbidden</span><br>
+          Authenticated but missing the required role/authority → <span class="code">RestAccessDeniedHandler</span> ·
+          <span class="code">E-01-ADMINISTRATOR-0009</span>
+        </div>
+        <div class="branch-card">
+          <span class="status">401 Unauthorized</span><br>
+          Invalid, expired, or blacklisted token → <span class="code">JwtAuthenticationFilter</span> writes 401 directly
+          (no handler hop)
+        </div>
+      </div>
+    </section>
+
+    <section id="endpoints" class="section">
+      <div class="section-head">
+        <h2>HTTP endpoints</h2>
+        <p class="section-desc">All paths are relative to <code>/api/v1</code>
+          (<code>server.servlet.context-path</code>).</p>
+      </div>
+      <div class="table-scroll">
+        <table class="ref-table" id="endpointsTable">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Path</th>
+              <th>Auth</th>
+              <th>Use case</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="error-codes" class="section">
+      <div class="section-head">
+        <h2>Error code reference</h2>
+        <p class="section-desc">Format <code>E-{layer}-{ENTITY}-{sequence}</code>. Layer of the thrower shown as a tag.
+        </p>
+      </div>
+      <div class="table-scroll">
+        <table class="ref-table" id="errorTable">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Thrown by</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="cache-keys" class="section">
+      <div class="section-head">
+        <h2>Cache keys</h2>
+        <p class="section-desc">Redis, cache-aside: checked first on reads, invalidated on writes.</p>
+      </div>
+      <div class="cache-grid" id="cacheGrid"></div>
+      <div class="table-scroll">
+        <table class="ref-table" id="cacheTable">
+          <thead>
+            <tr>
+              <th>Helper</th>
+              <th>Redis key format</th>
+              <th>Written by</th>
+              <th>Read by</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="known-gaps" class="section">
+      <div class="section-head">
+        <h2>Known gaps</h2>
+        <p class="section-desc">Not bugs to silently fix — context for future work.</p>
+      </div>
+      <div class="gap-grid">
+        <div class="gap-card"><span class="gtitle">No permissions seeded</span><code>V1__create_auth_tables.sql</code>
+          seeds only the <code>ADMIN</code> role with zero permissions. <code>ADMINISTRATOR_READ</code> /
+          <code>ADMINISTRATOR_MANAGE</code> referenced in <code>@PreAuthorize</code> are never inserted — those
+          endpoints are unreachable via permission until a migration or manual seed adds them.
+        </div>
+        <div class="gap-card"><span class="gtitle">ObjectStorageAdapter has no implementation</span>Port exists in
+          domain, no adapter (e.g. MinIO/S3) wired up yet.</div>
+        <div class="gap-card"><span class="gtitle">Only one email template
+            exists</span><code>email/login-notification</code> is the only template under
+          <code>infrastructure/src/main/resources/templates/</code> so far — other flows (e.g. registration) still have
+          none.
+        </div>
+        <div class="gap-card"><span class="gtitle">No PermissionJpaRepository</span>Permissions are only reachable via
+          <code>RoleEntity.permissions</code>.
+        </div>
+      </div>
+    </section>
+
+    <footer class="deploy">
+      <span class="lbl">deploy · docker compose</span>
+      <span class="svcs">mysql-primary · mysql-replica · redis · app · nginx</span>
+    </footer>
+  </div>
+
+  <script>
+    /* ============ 1. module tree (spine + panels) ============ */
+    const modules = [
+      {
+        key: "util", path: "util/", tagline: "Shared constants, helpers, base exceptions",
+        purpose: "No business logic — constants, response wrappers, and the base exception every layer above is allowed to depend on.",
+        groups: [
+          { label: "constant/", items: [{ name: "ApplicationConstants", note: "cache-key helpers, formats" }] },
+          { label: "response/", items: [{ name: "ResponseMaker" }, { name: "RestResponse" }] },
+          { label: "exception/", items: [{ name: "CoreException", note: "base for all thrown exceptions" }] },
+          { label: "annotation/", items: [{ name: "@UseCase" }, { name: "@Adapter" }] },
+        ]
+      },
+      {
+        key: "domain", path: "domain/", tagline: "Business rules, models, ports — the core",
+        purpose: "Immutable records only, no framework annotations. Everything above implements or calls into this layer; this layer calls into nothing but util.",
+        groups: [
+          {
+            label: "adapter/ (ports)", items: [
+              { name: "AdministratorRepositoryPort" }, { name: "RoleRepositoryPort" }, { name: "TokenProvider" },
+              { name: "CacheAdapter" }, { name: "PasswordHasher" },
+              { name: "LoginNotificationPort", newItem: true, note: "notifyLogin(administrator)" },
+              { name: "MailSenderAdapter" }, { name: "EmailTemplateRenderer" },
+              { name: "ObjectStorageAdapter", gap: true, note: "no implementation yet" },
+            ]
+          },
+          {
+            label: "model/", items: [
+              { name: "Administrator" }, { name: "MailMessage" }, { name: "TokenClaims" },
+              { name: "RefreshTokenCacheData" }, { name: "LoginFailureCacheData" }, { name: "AdministratorPermissionsCacheData" },
+            ]
+          },
+          { label: "enums/", items: [{ name: "AdministratorStatus" }] },
+          { label: "exception/", items: [{ name: "DomainValidationException", note: "E-{layer}-{ENTITY}-{seq}" }] },
+        ]
+      },
+      {
+        key: "application", path: "application/", tagline: "Use cases — one business operation each",
+        purpose: "Orchestrates domain ports behind a single public method per use case; command use cases return ResultWrapper instead of throwing.",
+        groups: [
+          {
+            label: "usecase/administrator/", items: [
+              { name: "LoginUseCase", note: "username or email + password → tokens, async mail" },
+              { name: "RegisterAdministratorUseCase" }, { name: "RefreshTokenUseCase" }, { name: "LogoutUseCase" },
+              { name: "ValidateAccessTokenUseCase", note: "hot path — every request" },
+              { name: "ListAdministratorsUseCase" }, { name: "UpdateAdministratorRolesUseCase" }, { name: "UpdateAdministratorStatusUseCase" },
+            ]
+          },
+          { label: "base/", items: [{ name: "ResultWrapper<T>" }, { name: "ResultHandler" }] },
+          { label: "dto/", items: [{ name: "LoginRequest / LoginResponse" }, { name: "…and per-use-case records" }] },
+        ]
+      },
+      {
+        key: "infrastructure", path: "infrastructure/", tagline: "Adapters, JPA, cache, migrations",
+        purpose: "Implements every domain port. JPA entities, MapStruct mappers, Redis and mail adapters, Flyway migrations, Spring config beans.",
+        groups: [
+          {
+            label: "adapter/ (impls)", items: [
+              { name: "AdministratorRepositoryAdapterImpl" }, { name: "RoleRepositoryAdapterImpl" }, { name: "JwtTokenProviderImpl" },
+              { name: "RedisAdapterImpl" }, { name: "BCryptPasswordHasherImpl" },
+              { name: "LoginNotificationAdapterImpl", newItem: true, note: "@Async — fire-and-forget" },
+              { name: "MailSenderAdapterImpl" }, { name: "EmailTemplateRendererImpl" },
+            ]
+          },
+          { label: "persistence/", items: [{ name: "entity/", note: "AdministratorEntity, RoleEntity…" }, { name: "repository/", note: "AdministratorJpaRepository…" }] },
+          { label: "resources/", items: [{ name: "db/migration/", note: "Flyway — V1__create_auth_tables.sql" }, { name: "templates/email/login-notification.html", newItem: true }] },
+          { label: "config/", items: [{ name: "EmailTemplateConfiguration" }, { name: "AsyncConfiguration", newItem: true, note: "@EnableAsync — first async usage" }, { name: "RedisConfiguration" }] },
+        ]
+      },
+      {
+        key: "presentation", path: "presentation/", tagline: "HTTP layer — controllers, filters, security",
+        purpose: "Everything that touches the servlet request/response cycle: REST controllers, the JWT filter, Spring Security config, exception handlers.",
+        groups: [
+          { label: "api/", items: [{ name: "AuthController" }, { name: "AdministratorController" }] },
+          { label: "filter/", items: [{ name: "JwtAuthenticationFilter" }] },
+          { label: "config/", items: [{ name: "SecurityConfig", note: "permits /error — an unhandled MVC exception forwards there, re-entering the filter chain" }, { name: "OpenApiConfig", newItem: true, note: "bearerAuth JWT security scheme for springdoc" }] },
+          { label: "handler/", items: [{ name: "ApiExceptionHandler", note: "+ MethodArgumentNotValidException → 400 E-00-CORE-0002" }, { name: "RestAuthenticationEntryPoint", note: "401 · no Authorization header" }, { name: "RestAccessDeniedHandler", note: "403 · missing authority" }] },
+        ]
+      },
+      {
+        key: "web", path: "web/", tagline: "Application entry point",
+        purpose: "Thin wrapper: the Spring Boot main class and per-profile application properties.",
+        groups: [
+          { label: "root", items: [{ name: "DemoApplication.java" }] },
+          { label: "resources/", items: [{ name: "application-{local,test,prod}.properties" }] },
+        ]
+      },
+    ];
+
+    const spine = document.getElementById("spine");
+    modules.forEach((m, i) => {
+      if (i > 0) {
+        const arrow = document.createElement("div");
+        arrow.className = "arrow"; arrow.textContent = "→"; arrow.setAttribute("aria-hidden", "true");
+        spine.appendChild(arrow);
+      }
+      const chip = document.createElement("button");
+      chip.className = "chip";
+      chip.style.setProperty("--dot", `var(--c-${m.key})`);
+      chip.setAttribute("aria-expanded", "false");
+      chip.setAttribute("data-target", m.key);
+      chip.innerHTML = `<span class="dot"></span><span class="name">${m.path}</span><span class="tagline">${m.tagline}</span>`;
+      chip.addEventListener("click", () => togglePanel(m.key));
+      spine.appendChild(chip);
+    });
+
+    function renderItems(items) {
+      return items.map(it => `
       <li>
         <span class="node-name">${it.name}</span>
         ${it.newItem ? '<span class="badge-new">new</span>' : ""}
         ${it.gap ? '<span class="badge-gap">no impl</span>' : ""}
         ${it.note ? `<div class="node-note">${it.note}</div>` : ""}
       </li>`).join("");
-  }
+    }
 
-  const panelsEl = document.getElementById("panels");
-  modules.forEach(m => {
-    const count = m.groups.reduce((n, g) => n + g.items.length, 0);
-    const panel = document.createElement("section");
-    panel.className = "panel";
-    panel.id = `panel-${m.key}`;
-    panel.style.setProperty("--dot", `var(--c-${m.key})`);
-    panel.style.setProperty("--soft", `var(--c-${m.key}-soft)`);
-    panel.innerHTML = `
+    const panelsEl = document.getElementById("panels");
+    modules.forEach(m => {
+      const count = m.groups.reduce((n, g) => n + g.items.length, 0);
+      const panel = document.createElement("section");
+      panel.className = "panel";
+      panel.id = `panel-${m.key}`;
+      panel.style.setProperty("--dot", `var(--c-${m.key})`);
+      panel.style.setProperty("--soft", `var(--c-${m.key}-soft)`);
+      panel.innerHTML = `
       <div class="panel-head" data-target="${m.key}" role="button" tabindex="0" aria-expanded="false">
         <div class="panel-head-left">
           <span class="mod-name">${m.path}</span>
@@ -567,159 +1377,159 @@
           </div>
         </div>
       </div>`;
-    panelsEl.appendChild(panel);
-    const head = panel.querySelector(".panel-head");
-    head.addEventListener("click", () => togglePanel(m.key));
-    head.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePanel(m.key); } });
-  });
+      panelsEl.appendChild(panel);
+      const head = panel.querySelector(".panel-head");
+      head.addEventListener("click", () => togglePanel(m.key));
+      head.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePanel(m.key); } });
+    });
 
-  function togglePanel(key) {
-    const panel = document.getElementById(`panel-${key}`);
-    const head = panel.querySelector(".panel-head");
-    const chip = document.querySelector(`.chip[data-target="${key}"]`);
-    const nowOpen = !panel.classList.contains("open");
-    panel.classList.toggle("open", nowOpen);
-    head.setAttribute("aria-expanded", String(nowOpen));
-    if (chip) chip.setAttribute("aria-expanded", String(nowOpen));
-  }
-  document.getElementById("expandAll").addEventListener("click", () => modules.forEach(m => setPanel(m.key, true)));
-  document.getElementById("collapseAll").addEventListener("click", () => modules.forEach(m => setPanel(m.key, false)));
-  function setPanel(key, open) {
-    document.getElementById(`panel-${key}`).classList.toggle("open", open);
-    document.querySelector(`#panel-${key} .panel-head`).setAttribute("aria-expanded", String(open));
-    const chip = document.querySelector(`.chip[data-target="${key}"]`);
-    if (chip) chip.setAttribute("aria-expanded", String(open));
-  }
-  setPanel("domain", true); // open the core by default
+    function togglePanel(key) {
+      const panel = document.getElementById(`panel-${key}`);
+      const head = panel.querySelector(".panel-head");
+      const chip = document.querySelector(`.chip[data-target="${key}"]`);
+      const nowOpen = !panel.classList.contains("open");
+      panel.classList.toggle("open", nowOpen);
+      head.setAttribute("aria-expanded", String(nowOpen));
+      if (chip) chip.setAttribute("aria-expanded", String(nowOpen));
+    }
+    document.getElementById("expandAll").addEventListener("click", () => modules.forEach(m => setPanel(m.key, true)));
+    document.getElementById("collapseAll").addEventListener("click", () => modules.forEach(m => setPanel(m.key, false)));
+    function setPanel(key, open) {
+      document.getElementById(`panel-${key}`).classList.toggle("open", open);
+      document.querySelector(`#panel-${key} .panel-head`).setAttribute("aria-expanded", String(open));
+      const chip = document.querySelector(`.chip[data-target="${key}"]`);
+      if (chip) chip.setAttribute("aria-expanded", String(open));
+    }
+    setPanel("domain", true); // open the core by default
 
-  const legend = document.getElementById("legend");
-  legend.innerHTML = modules.map(m => `<span class="item"><span class="sw" style="background:var(--c-${m.key})"></span>${m.path}</span>`).join("")
-    + `<span class="item"><span class="new-sw"></span>added this session</span>`;
+    const legend = document.getElementById("legend");
+    legend.innerHTML = modules.map(m => `<span class="item"><span class="sw" style="background:var(--c-${m.key})"></span>${m.path}</span>`).join("")
+      + `<span class="item"><span class="new-sw"></span>added this session</span>`;
 
-  /* ============ 2. dependency graph ============ */
-  const graphNodes = {
-    usecase: [
-      { id: "uc-login", label: "LoginUseCase" },
-      { id: "uc-register", label: "RegisterAdministratorUseCase" },
-      { id: "uc-refresh", label: "RefreshTokenUseCase" },
-      { id: "uc-logout", label: "LogoutUseCase" },
-      { id: "uc-validate", label: "ValidateAccessTokenUseCase" },
-      { id: "uc-list", label: "ListAdministratorsUseCase" },
-      { id: "uc-updroles", label: "UpdateAdministratorRolesUseCase" },
-      { id: "uc-updstatus", label: "UpdateAdministratorStatusUseCase" },
-    ],
-    port: [
-      { id: "port-admin", label: "AdministratorRepositoryPort" },
-      { id: "port-role", label: "RoleRepositoryPort" },
-      { id: "port-token", label: "TokenProvider" },
-      { id: "port-cache", label: "CacheAdapter" },
-      { id: "port-pw", label: "PasswordHasher" },
-      { id: "port-notify", label: "LoginNotificationPort", newItem: true },
-      { id: "port-mail", label: "MailSenderAdapter" },
-      { id: "port-template", label: "EmailTemplateRenderer" },
-      { id: "port-storage", label: "ObjectStorageAdapter", gap: true },
-    ],
-    adapter: [
-      { id: "ad-admin", label: "AdministratorRepositoryAdapterImpl" },
-      { id: "ad-role", label: "RoleRepositoryAdapterImpl" },
-      { id: "ad-token", label: "JwtTokenProviderImpl" },
-      { id: "ad-redis", label: "RedisAdapterImpl" },
-      { id: "ad-pw", label: "BCryptPasswordHasherImpl" },
-      { id: "ad-notify", label: "LoginNotificationAdapterImpl", newItem: true },
-      { id: "ad-mail", label: "MailSenderAdapterImpl" },
-      { id: "ad-template", label: "EmailTemplateRendererImpl" },
-    ],
-  };
-
-  const graphEdges = [
-    // use case -> port
-    ...["port-admin","port-token","port-cache","port-pw","port-notify"].map(t => ({ from: "uc-login", to: t, type: "uc" })),
-    ...["port-admin","port-role","port-pw"].map(t => ({ from: "uc-register", to: t, type: "uc" })),
-    ...["port-admin","port-token","port-cache"].map(t => ({ from: "uc-refresh", to: t, type: "uc" })),
-    ...["port-token","port-cache"].map(t => ({ from: "uc-logout", to: t, type: "uc" })),
-    ...["port-token","port-cache","port-admin"].map(t => ({ from: "uc-validate", to: t, type: "uc" })),
-    { from: "uc-list", to: "port-admin", type: "uc" },
-    { from: "uc-updroles", to: "port-admin", type: "uc" },
-    { from: "uc-updstatus", to: "port-admin", type: "uc" },
-    // port -> adapter (impl)
-    { from: "port-admin", to: "ad-admin", type: "impl" },
-    { from: "port-role", to: "ad-role", type: "impl" },
-    { from: "port-token", to: "ad-token", type: "impl" },
-    { from: "port-cache", to: "ad-redis", type: "impl" },
-    { from: "port-pw", to: "ad-pw", type: "impl" },
-    { from: "port-notify", to: "ad-notify", type: "impl" },
-    { from: "port-mail", to: "ad-mail", type: "impl" },
-    { from: "port-template", to: "ad-template", type: "impl" },
-    // adapter -> port (calls another port directly)
-    { from: "ad-notify", to: "port-mail", type: "call" },
-    { from: "ad-notify", to: "port-template", type: "call" },
-  ];
-
-  // Crossing reduction: order each column by the average position of the nodes in the
-  // previous column that connect to it (barycenter heuristic) — nodes with no incoming
-  // edge (e.g. the unused ObjectStorageAdapter port) sink to the bottom.
-  function barycenterSort(items, incomingEdges, prevIndex) {
-    const score = id => {
-      const positions = incomingEdges.filter(e => e.to === id).map(e => prevIndex[e.from]).filter(v => v !== undefined);
-      return positions.length ? positions.reduce((a, b) => a + b, 0) / positions.length : Number.MAX_SAFE_INTEGER;
+    /* ============ 2. dependency graph ============ */
+    const graphNodes = {
+      usecase: [
+        { id: "uc-login", label: "LoginUseCase" },
+        { id: "uc-register", label: "RegisterAdministratorUseCase" },
+        { id: "uc-refresh", label: "RefreshTokenUseCase" },
+        { id: "uc-logout", label: "LogoutUseCase" },
+        { id: "uc-validate", label: "ValidateAccessTokenUseCase" },
+        { id: "uc-list", label: "ListAdministratorsUseCase" },
+        { id: "uc-updroles", label: "UpdateAdministratorRolesUseCase" },
+        { id: "uc-updstatus", label: "UpdateAdministratorStatusUseCase" },
+      ],
+      port: [
+        { id: "port-admin", label: "AdministratorRepositoryPort" },
+        { id: "port-role", label: "RoleRepositoryPort" },
+        { id: "port-token", label: "TokenProvider" },
+        { id: "port-cache", label: "CacheAdapter" },
+        { id: "port-pw", label: "PasswordHasher" },
+        { id: "port-notify", label: "LoginNotificationPort", newItem: true },
+        { id: "port-mail", label: "MailSenderAdapter" },
+        { id: "port-template", label: "EmailTemplateRenderer" },
+        { id: "port-storage", label: "ObjectStorageAdapter", gap: true },
+      ],
+      adapter: [
+        { id: "ad-admin", label: "AdministratorRepositoryAdapterImpl" },
+        { id: "ad-role", label: "RoleRepositoryAdapterImpl" },
+        { id: "ad-token", label: "JwtTokenProviderImpl" },
+        { id: "ad-redis", label: "RedisAdapterImpl" },
+        { id: "ad-pw", label: "BCryptPasswordHasherImpl" },
+        { id: "ad-notify", label: "LoginNotificationAdapterImpl", newItem: true },
+        { id: "ad-mail", label: "MailSenderAdapterImpl" },
+        { id: "ad-template", label: "EmailTemplateRendererImpl" },
+      ],
     };
-    return [...items].sort((a, b) => score(a.id) - score(b.id));
-  }
-  const usecaseIndex = Object.fromEntries(graphNodes.usecase.map((n, i) => [n.id, i]));
-  graphNodes.port = barycenterSort(graphNodes.port, graphEdges.filter(e => e.type === "uc"), usecaseIndex);
-  const portIndex = Object.fromEntries(graphNodes.port.map((n, i) => [n.id, i]));
-  graphNodes.adapter = barycenterSort(graphNodes.adapter, graphEdges.filter(e => e.type === "impl"), portIndex);
 
-  let pinnedNode = null;
-  function setActiveNode(nodeId) {
-    const connected = graphEdges.filter(e => e.from === nodeId || e.to === nodeId);
-    const nodeIds = new Set([nodeId]);
-    connected.forEach(e => { nodeIds.add(e.from); nodeIds.add(e.to); });
-    document.querySelectorAll(".gnode").forEach(el => {
-      el.classList.toggle("hl", nodeIds.has(el.id));
-      el.classList.toggle("dim", !nodeIds.has(el.id));
-    });
-    document.querySelectorAll("#graphSvg path").forEach(p => {
-      const match = p.dataset.from === nodeId || p.dataset.to === nodeId;
-      p.classList.toggle("hl", match);
-      p.classList.toggle("dim", !match);
-    });
-  }
-  function clearActiveNode() {
-    document.querySelectorAll(".gnode, #graphSvg path").forEach(el => el.classList.remove("hl", "dim"));
-  }
+    const graphEdges = [
+      // use case -> port
+      ...["port-admin", "port-token", "port-cache", "port-pw", "port-notify"].map(t => ({ from: "uc-login", to: t, type: "uc" })),
+      ...["port-admin", "port-role", "port-pw"].map(t => ({ from: "uc-register", to: t, type: "uc" })),
+      ...["port-admin", "port-token", "port-cache"].map(t => ({ from: "uc-refresh", to: t, type: "uc" })),
+      ...["port-token", "port-cache"].map(t => ({ from: "uc-logout", to: t, type: "uc" })),
+      ...["port-token", "port-cache", "port-admin"].map(t => ({ from: "uc-validate", to: t, type: "uc" })),
+      { from: "uc-list", to: "port-admin", type: "uc" },
+      { from: "uc-updroles", to: "port-admin", type: "uc" },
+      { from: "uc-updstatus", to: "port-admin", type: "uc" },
+      // port -> adapter (impl)
+      { from: "port-admin", to: "ad-admin", type: "impl" },
+      { from: "port-role", to: "ad-role", type: "impl" },
+      { from: "port-token", to: "ad-token", type: "impl" },
+      { from: "port-cache", to: "ad-redis", type: "impl" },
+      { from: "port-pw", to: "ad-pw", type: "impl" },
+      { from: "port-notify", to: "ad-notify", type: "impl" },
+      { from: "port-mail", to: "ad-mail", type: "impl" },
+      { from: "port-template", to: "ad-template", type: "impl" },
+      // adapter -> port (calls another port directly)
+      { from: "ad-notify", to: "port-mail", type: "call" },
+      { from: "ad-notify", to: "port-template", type: "call" },
+    ];
 
-  ["usecase","port","adapter"].forEach(colKey => {
-    const col = document.querySelector(`.graph-col[data-col="${colKey}"]`);
-    graphNodes[colKey].forEach(n => {
-      const el = document.createElement("div");
-      el.className = `gnode gnode-${colKey}${n.gap ? " gnode-gap" : ""}`;
-      el.id = n.id;
-      el.tabIndex = 0;
-      el.innerHTML = n.label + (n.newItem ? '<span class="badge-new">new</span>' : "") + (n.gap ? '<span class="badge-gap">no impl</span>' : "");
-      el.addEventListener("mouseenter", () => { if (!pinnedNode) setActiveNode(n.id); });
-      el.addEventListener("mouseleave", () => { if (!pinnedNode) clearActiveNode(); });
-      el.addEventListener("focus", () => { if (!pinnedNode) setActiveNode(n.id); });
-      el.addEventListener("blur", () => { if (!pinnedNode) clearActiveNode(); });
-      el.addEventListener("click", () => {
-        pinnedNode = pinnedNode === n.id ? null : n.id;
-        if (pinnedNode) setActiveNode(pinnedNode); else clearActiveNode();
+    // Crossing reduction: order each column by the average position of the nodes in the
+    // previous column that connect to it (barycenter heuristic) — nodes with no incoming
+    // edge (e.g. the unused ObjectStorageAdapter port) sink to the bottom.
+    function barycenterSort(items, incomingEdges, prevIndex) {
+      const score = id => {
+        const positions = incomingEdges.filter(e => e.to === id).map(e => prevIndex[e.from]).filter(v => v !== undefined);
+        return positions.length ? positions.reduce((a, b) => a + b, 0) / positions.length : Number.MAX_SAFE_INTEGER;
+      };
+      return [...items].sort((a, b) => score(a.id) - score(b.id));
+    }
+    const usecaseIndex = Object.fromEntries(graphNodes.usecase.map((n, i) => [n.id, i]));
+    graphNodes.port = barycenterSort(graphNodes.port, graphEdges.filter(e => e.type === "uc"), usecaseIndex);
+    const portIndex = Object.fromEntries(graphNodes.port.map((n, i) => [n.id, i]));
+    graphNodes.adapter = barycenterSort(graphNodes.adapter, graphEdges.filter(e => e.type === "impl"), portIndex);
+
+    let pinnedNode = null;
+    function setActiveNode(nodeId) {
+      const connected = graphEdges.filter(e => e.from === nodeId || e.to === nodeId);
+      const nodeIds = new Set([nodeId]);
+      connected.forEach(e => { nodeIds.add(e.from); nodeIds.add(e.to); });
+      document.querySelectorAll(".gnode").forEach(el => {
+        el.classList.toggle("hl", nodeIds.has(el.id));
+        el.classList.toggle("dim", !nodeIds.has(el.id));
       });
-      col.appendChild(el);
-    });
-  });
-  document.getElementById("graphScroll").addEventListener("click", e => {
-    if (!e.target.closest(".gnode")) { pinnedNode = null; clearActiveNode(); }
-  });
+      document.querySelectorAll("#graphSvg path").forEach(p => {
+        const match = p.dataset.from === nodeId || p.dataset.to === nodeId;
+        p.classList.toggle("hl", match);
+        p.classList.toggle("dim", !match);
+      });
+    }
+    function clearActiveNode() {
+      document.querySelectorAll(".gnode, #graphSvg path").forEach(el => el.classList.remove("hl", "dim"));
+    }
 
-  function drawGraph() {
-    const container = document.getElementById("graphCanvas");
-    const svg = document.getElementById("graphSvg");
-    const cRect = container.getBoundingClientRect();
-    svg.setAttribute("width", container.scrollWidth);
-    svg.setAttribute("height", container.scrollHeight);
-    svg.innerHTML = `
-      <defs>
+    ["usecase", "port", "adapter"].forEach(colKey => {
+      const col = document.querySelector(`.graph-col[data-col="${colKey}"]`);
+      graphNodes[colKey].forEach(n => {
+        const el = document.createElement("div");
+        el.className = `gnode gnode-${colKey}${n.gap ? " gnode-gap" : ""}`;
+        el.id = n.id;
+        el.tabIndex = 0;
+        el.innerHTML = n.label + (n.newItem ? '<span class="badge-new">new</span>' : "") + (n.gap ? '<span class="badge-gap">no impl</span>' : "");
+        el.addEventListener("mouseenter", () => { if (!pinnedNode) setActiveNode(n.id); });
+        el.addEventListener("mouseleave", () => { if (!pinnedNode) clearActiveNode(); });
+        el.addEventListener("focus", () => { if (!pinnedNode) setActiveNode(n.id); });
+        el.addEventListener("blur", () => { if (!pinnedNode) clearActiveNode(); });
+        el.addEventListener("click", () => {
+          pinnedNode = pinnedNode === n.id ? null : n.id;
+          if (pinnedNode) setActiveNode(pinnedNode); else clearActiveNode();
+        });
+        col.appendChild(el);
+      });
+    });
+    document.getElementById("graphScroll").addEventListener("click", e => {
+      if (!e.target.closest(".gnode")) { pinnedNode = null; clearActiveNode(); }
+    });
+
+    function drawGraph() {
+      const container = document.getElementById("graphCanvas");
+      const svg = document.getElementById("graphSvg");
+      const cRect = container.getBoundingClientRect();
+      svg.setAttribute("width", container.scrollWidth);
+      svg.setAttribute("height", container.scrollHeight);
+      svg.innerHTML = `
+          < defs >
         <marker id="arr-uc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M0,0 L10,5 L0,10 z" style="fill:var(--c-application)"></path>
         </marker>
@@ -729,134 +1539,135 @@
         <marker id="arr-call" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M0,0 L10,5 L0,10 z" style="fill:var(--c-domain)"></path>
         </marker>
-      </defs>`;
-    const styles = {
-      uc: { color: "var(--c-application)", dash: "none", marker: "arr-uc" },
-      impl: { color: "var(--c-infrastructure)", dash: "5,4", marker: "arr-impl" },
-      call: { color: "var(--c-domain)", dash: "1.5,3.5", marker: "arr-call" },
-    };
-    graphEdges.forEach(e => {
-      const from = document.getElementById(e.from);
-      const to = document.getElementById(e.to);
-      if (!from || !to) return;
-      const fr = from.getBoundingClientRect();
-      const tr = to.getBoundingClientRect();
-      const fCenterX = fr.left + fr.width / 2;
-      const tCenterX = tr.left + tr.width / 2;
-      let x1, x2;
-      if (tCenterX >= fCenterX) { x1 = fr.right - cRect.left; x2 = tr.left - cRect.left; }
-      else { x1 = fr.left - cRect.left; x2 = tr.right - cRect.left; }
-      const y1 = fr.top + fr.height / 2 - cRect.top;
-      const y2 = tr.top + tr.height / 2 - cRect.top;
-      const dx = Math.max(30, Math.abs(x2 - x1) / 2);
-      const cx1 = x1 + (x2 >= x1 ? dx : -dx);
-      const cx2 = x2 + (x2 >= x1 ? -dx : dx);
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("d", `M ${x1} ${y1} C ${cx1} ${y1}, ${cx2} ${y2}, ${x2} ${y2}`);
-      const s = styles[e.type];
-      path.setAttribute("style", `stroke:${s.color};stroke-dasharray:${s.dash};`);
-      path.setAttribute("marker-end", `url(#${s.marker})`);
-      path.dataset.from = e.from;
-      path.dataset.to = e.to;
-      const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-      title.textContent = `${from.textContent.replace("new","").replace("no impl","")} → ${to.textContent.replace("new","").replace("no impl","")}`;
-      path.appendChild(title);
-      svg.appendChild(path);
+      </defs > `;
+      const styles = {
+        uc: { color: "var(--c-application)", dash: "none", marker: "arr-uc" },
+        impl: { color: "var(--c-infrastructure)", dash: "5,4", marker: "arr-impl" },
+        call: { color: "var(--c-domain)", dash: "1.5,3.5", marker: "arr-call" },
+      };
+      graphEdges.forEach(e => {
+        const from = document.getElementById(e.from);
+        const to = document.getElementById(e.to);
+        if (!from || !to) return;
+        const fr = from.getBoundingClientRect();
+        const tr = to.getBoundingClientRect();
+        const fCenterX = fr.left + fr.width / 2;
+        const tCenterX = tr.left + tr.width / 2;
+        let x1, x2;
+        if (tCenterX >= fCenterX) { x1 = fr.right - cRect.left; x2 = tr.left - cRect.left; }
+        else { x1 = fr.left - cRect.left; x2 = tr.right - cRect.left; }
+        const y1 = fr.top + fr.height / 2 - cRect.top;
+        const y2 = tr.top + tr.height / 2 - cRect.top;
+        const dx = Math.max(30, Math.abs(x2 - x1) / 2);
+        const cx1 = x1 + (x2 >= x1 ? dx : -dx);
+        const cx2 = x2 + (x2 >= x1 ? -dx : dx);
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", `M ${x1} ${y1} C ${cx1} ${y1}, ${cx2} ${y2}, ${x2} ${y2} `);
+        const s = styles[e.type];
+        path.setAttribute("style", `stroke:${s.color}; stroke - dasharray:${s.dash}; `);
+        path.setAttribute("marker-end", `url(#${s.marker})`);
+        path.dataset.from = e.from;
+        path.dataset.to = e.to;
+        const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+        title.textContent = `${from.textContent.replace("new", "").replace("no impl", "")} → ${to.textContent.replace("new", "").replace("no impl", "")} `;
+        path.appendChild(title);
+        svg.appendChild(path);
+      });
+      if (pinnedNode) setActiveNode(pinnedNode);
+    }
+
+    let resizeTimer;
+    window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawGraph, 120); });
+    window.addEventListener("load", drawGraph);
+    requestAnimationFrame(() => requestAnimationFrame(drawGraph));
+    document.getElementById("expandAll").addEventListener("click", () => setTimeout(drawGraph, 250));
+    document.getElementById("collapseAll").addEventListener("click", () => setTimeout(drawGraph, 250));
+
+    /* ============ 3. request pipeline ============ */
+    const steps = ["SecurityConfig", "JwtAuthenticationFilter", "@PreAuthorize", "Controller", "UseCase", "ResultWrapper", "toResponseEntity"];
+    const flow = document.getElementById("pipelineFlow");
+    steps.forEach((s, i) => {
+      if (i > 0) { const a = document.createElement("span"); a.className = "parrow"; a.textContent = "→"; flow.appendChild(a); }
+      const el = document.createElement("span"); el.className = "pstep"; el.textContent = s; flow.appendChild(el);
     });
-    if (pinnedNode) setActiveNode(pinnedNode);
-  }
 
-  let resizeTimer;
-  window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawGraph, 120); });
-  window.addEventListener("load", drawGraph);
-  requestAnimationFrame(() => requestAnimationFrame(drawGraph));
-  document.getElementById("expandAll").addEventListener("click", () => setTimeout(drawGraph, 250));
-  document.getElementById("collapseAll").addEventListener("click", () => setTimeout(drawGraph, 250));
-
-  /* ============ 3. request pipeline ============ */
-  const steps = ["SecurityConfig", "JwtAuthenticationFilter", "@PreAuthorize", "Controller", "UseCase", "ResultWrapper", "toResponseEntity"];
-  const flow = document.getElementById("pipelineFlow");
-  steps.forEach((s, i) => {
-    if (i > 0) { const a = document.createElement("span"); a.className = "parrow"; a.textContent = "→"; flow.appendChild(a); }
-    const el = document.createElement("span"); el.className = "pstep"; el.textContent = s; flow.appendChild(el);
-  });
-
-  /* ============ 4. endpoints table ============ */
-  const endpoints = [
-    { method: "POST", path: "/auth/login", auth: "public", uc: "LoginUseCase" },
-    { method: "POST", path: "/auth/register", auth: "public", uc: "RegisterAdministratorUseCase (201)" },
-    { method: "POST", path: "/auth/refresh", auth: "public", uc: "RefreshTokenUseCase" },
-    { method: "POST", path: "/auth/logout", auth: "Bearer token required", uc: "LogoutUseCase" },
-    { method: "GET", path: "/administrators", auth: "ADMINISTRATOR_READ authority", uc: "ListAdministratorsUseCase" },
-    { method: "PATCH", path: "/administrators/{id}/roles", auth: "ADMINISTRATOR_MANAGE authority", uc: "UpdateAdministratorRolesUseCase" },
-    { method: "PATCH", path: "/administrators/{id}/status", auth: "ADMIN role", uc: "UpdateAdministratorStatusUseCase" },
-    { method: "GET", path: "/v3/api-docs", auth: "public", uc: "springdoc-openapi (generated spec)" },
-    { method: "GET", path: "/swagger-ui/**, /swagger-ui.html", auth: "public", uc: "springdoc-openapi (Swagger UI)" },
-  ];
-  document.querySelector("#endpointsTable tbody").innerHTML = endpoints.map(e => `
-    <tr>
+    /* ============ 4. endpoints table ============ */
+    const endpoints = [
+      { method: "POST", path: "/auth/login", auth: "public", uc: "LoginUseCase" },
+      { method: "POST", path: "/auth/register", auth: "public", uc: "RegisterAdministratorUseCase (201)" },
+      { method: "POST", path: "/auth/refresh", auth: "public", uc: "RefreshTokenUseCase" },
+      { method: "POST", path: "/auth/logout", auth: "Bearer token required", uc: "LogoutUseCase" },
+      { method: "GET", path: "/administrators", auth: "ADMINISTRATOR_READ authority", uc: "ListAdministratorsUseCase" },
+      { method: "PATCH", path: "/administrators/{id}/roles", auth: "ADMINISTRATOR_MANAGE authority", uc: "UpdateAdministratorRolesUseCase" },
+      { method: "PATCH", path: "/administrators/{id}/status", auth: "ADMIN role", uc: "UpdateAdministratorStatusUseCase" },
+      { method: "GET", path: "/v3/api-docs", auth: "public", uc: "springdoc-openapi (generated spec)" },
+      { method: "GET", path: "/swagger-ui/**, /swagger-ui.html", auth: "public", uc: "springdoc-openapi (Swagger UI)" },
+    ];
+    document.querySelector("#endpointsTable tbody").innerHTML = endpoints.map(e => `
+          < tr >
       <td class="mono">${e.method}</td>
       <td class="mono">${e.path}</td>
       <td>${e.auth === "public" ? '<span class="pill pill-public">public</span>' : `<span class="pill pill-auth">${e.auth}</span>`}</td>
       <td class="mono">${e.uc}</td>
-    </tr>`).join("");
+    </tr > `).join("");
 
-  /* ============ 5. error codes table ============ */
-  const layerOf = name => name.includes("Impl") || name.includes("Adapter") ? "infrastructure" : (name.startsWith("Rest") || name === "ApiExceptionHandler" ? "presentation" : "application");
-  const errors = [
-    { code: "E-01-ADMINISTRATOR-0001", by: "RegisterAdministratorUseCase", meaning: "Username already taken" },
-    { code: "E-01-ADMINISTRATOR-0002", by: "RegisterAdministratorUseCase", meaning: "Email already taken" },
-    { code: "E-01-ADMINISTRATOR-0003", by: "LoginUseCase", meaning: "Username not found or password mismatch" },
-    { code: "E-01-ADMINISTRATOR-0004", by: "LoginUseCase", meaning: "Account not ACTIVE" },
-    { code: "E-01-ADMINISTRATOR-0005", by: "RefreshTokenUseCase", meaning: "Refresh token mismatch, or administrator not found/not ACTIVE" },
-    { code: "E-01-ADMINISTRATOR-0006", by: "ValidateAccessTokenUseCase", meaning: "Access token jti blacklisted (logged out)" },
-    { code: "E-01-ADMINISTRATOR-0007", by: "JwtTokenProviderImpl", meaning: "JWT malformed / expired / bad signature" },
-    { code: "E-01-ADMINISTRATOR-0008", by: "RestAuthenticationEntryPoint", meaning: "No Authorization header on protected endpoint (401)" },
-    { code: "E-01-ADMINISTRATOR-0009", by: "RestAccessDeniedHandler", meaning: "Authenticated but lacking required role/authority (403)" },
-    { code: "E-01-ADMINISTRATOR-0010", by: "AdministratorRepositoryAdapterImpl", meaning: "Administrator id not found" },
-    { code: "E-01-ADMINISTRATOR-0011", by: "AdministratorRepositoryAdapterImpl", meaning: "One or more requested role names don't exist" },
-    { code: "E-01-ADMINISTRATOR-0013", by: "LoginUseCase", meaning: "Account locked (≥5 failed attempts in 15 min). 0012 is intentionally reserved, never thrown." },
-    { code: "E-03-REDIS-0001..0005", by: "RedisAdapterImpl", meaning: "Redis get/set/delete/deleteByPattern/exists failure, respectively" },
-    { code: "E-03-MAIL-0001 / 0002", by: "MailSenderAdapterImpl", meaning: "MailException / MessagingException on send" },
-    { code: "E-00-CORE-0001", by: "ApiExceptionHandler", meaning: "Generic unhandled CoreException → 500" },
-    { code: "E-00-CORE-0002", by: "ApiExceptionHandler", meaning: "@Valid DTO binding failure (MethodArgumentNotValidException) → 400; message built dynamically from field errors" },
-  ];
-  document.querySelector("#errorTable tbody").innerHTML = errors.map(e => `
-    <tr>
+    /* ============ 5. error codes table ============ */
+    const layerOf = name => name.includes("Impl") || name.includes("Adapter") ? "infrastructure" : (name.startsWith("Rest") || name === "ApiExceptionHandler" ? "presentation" : "application");
+    const errors = [
+      { code: "E-01-ADMINISTRATOR-0001", by: "RegisterAdministratorUseCase", meaning: "Username already taken" },
+      { code: "E-01-ADMINISTRATOR-0002", by: "RegisterAdministratorUseCase", meaning: "Email already taken" },
+      { code: "E-01-ADMINISTRATOR-0003", by: "LoginUseCase", meaning: "Username not found or password mismatch" },
+      { code: "E-01-ADMINISTRATOR-0004", by: "LoginUseCase", meaning: "Account not ACTIVE" },
+      { code: "E-01-ADMINISTRATOR-0005", by: "RefreshTokenUseCase", meaning: "Refresh token mismatch, or administrator not found/not ACTIVE" },
+      { code: "E-01-ADMINISTRATOR-0006", by: "ValidateAccessTokenUseCase", meaning: "Access token jti blacklisted (logged out)" },
+      { code: "E-01-ADMINISTRATOR-0007", by: "JwtTokenProviderImpl", meaning: "JWT malformed / expired / bad signature" },
+      { code: "E-01-ADMINISTRATOR-0008", by: "RestAuthenticationEntryPoint", meaning: "No Authorization header on protected endpoint (401)" },
+      { code: "E-01-ADMINISTRATOR-0009", by: "RestAccessDeniedHandler", meaning: "Authenticated but lacking required role/authority (403)" },
+      { code: "E-01-ADMINISTRATOR-0010", by: "AdministratorRepositoryAdapterImpl", meaning: "Administrator id not found" },
+      { code: "E-01-ADMINISTRATOR-0011", by: "AdministratorRepositoryAdapterImpl", meaning: "One or more requested role names don't exist" },
+      { code: "E-01-ADMINISTRATOR-0013", by: "LoginUseCase", meaning: "Account locked (≥5 failed attempts in 15 min). 0012 is intentionally reserved, never thrown." },
+      { code: "E-03-REDIS-0001..0005", by: "RedisAdapterImpl", meaning: "Redis get/set/delete/deleteByPattern/exists failure, respectively" },
+      { code: "E-03-MAIL-0001 / 0002", by: "MailSenderAdapterImpl", meaning: "MailException / MessagingException on send" },
+      { code: "E-00-CORE-0001", by: "ApiExceptionHandler", meaning: "Generic unhandled CoreException → 500" },
+      { code: "E-00-CORE-0002", by: "ApiExceptionHandler", meaning: "@Valid DTO binding failure (MethodArgumentNotValidException) → 400; message built dynamically from field errors" },
+    ];
+    document.querySelector("#errorTable tbody").innerHTML = errors.map(e => `
+          < tr >
       <td class="mono">${e.code}</td>
       <td><span class="layer-tag layer-${layerOf(e.by)}">${layerOf(e.by)}</span><span class="mono">${e.by}</span></td>
       <td>${e.meaning}</td>
-    </tr>`).join("");
+    </tr > `).join("");
 
-  /* ============ 6. cache keys ============ */
-  const caches = [
-    { name: "cacheKeyAdministratorRefreshToken(administratorId)", key: "CACHE_ADMINISTRATOR_REFRESH_TOKEN_{administratorId}", written: "LoginUseCase, RefreshTokenUseCase", read: "RefreshTokenUseCase, LogoutUseCase (delete)" },
-    { name: "cacheKeyAdministratorTokenBlacklist(jti)", key: "CACHE_ADMINISTRATOR_TOKEN_BLACKLIST_{jti}", written: "LogoutUseCase", read: "ValidateAccessTokenUseCase" },
-    { name: "cacheKeyAdministratorPermissions(administratorId)", key: "CACHE_ADMINISTRATOR_PERMISSIONS_{administratorId}", written: "AdministratorRepositoryAdapterImpl.findPermissions (set, 15-min TTL); invalidated by updateRoles/updateStatus", read: "ValidateAccessTokenUseCase (via findPermissions)" },
-    { name: "cacheKeyAdministratorLoginFailures(username)", key: "CACHE_ADMINISTRATOR_LOGIN_FAILURES_{username}", written: "LoginUseCase", read: "LoginUseCase" },
-  ];
-  document.getElementById("cacheGrid").innerHTML = caches.map(c => `
-    <div class="cache-card">
+    /* ============ 6. cache keys ============ */
+    const caches = [
+      { name: "cacheKeyAdministratorRefreshToken(administratorId)", key: "CACHE_ADMINISTRATOR_REFRESH_TOKEN_{administratorId}", written: "LoginUseCase, RefreshTokenUseCase", read: "RefreshTokenUseCase, LogoutUseCase (delete)" },
+      { name: "cacheKeyAdministratorTokenBlacklist(jti)", key: "CACHE_ADMINISTRATOR_TOKEN_BLACKLIST_{jti}", written: "LogoutUseCase", read: "ValidateAccessTokenUseCase" },
+      { name: "cacheKeyAdministratorPermissions(administratorId)", key: "CACHE_ADMINISTRATOR_PERMISSIONS_{administratorId}", written: "AdministratorRepositoryAdapterImpl.findPermissions (set, 15-min TTL); invalidated by updateRoles/updateStatus", read: "ValidateAccessTokenUseCase (via findPermissions)" },
+      { name: "cacheKeyAdministratorLoginFailures(username)", key: "CACHE_ADMINISTRATOR_LOGIN_FAILURES_{username}", written: "LoginUseCase", read: "LoginUseCase" },
+    ];
+    document.getElementById("cacheGrid").innerHTML = caches.map(c => `
+          < div class="cache-card" >
       <span class="key">${c.key}</span>
       <div class="flow-row"><b>written</b><span>${c.written}</span></div>
       <div class="flow-row"><b>read</b><span>${c.read}</span></div>
-    </div>`).join("");
-  document.querySelector("#cacheTable tbody").innerHTML = caches.map(c => `
-    <tr>
+    </div > `).join("");
+    document.querySelector("#cacheTable tbody").innerHTML = caches.map(c => `
+          < tr >
       <td class="mono">${c.name}</td>
       <td class="mono">${c.key}</td>
       <td>${c.written}</td>
       <td>${c.read}</td>
-    </tr>`).join("");
+    </tr >`).join("");
 
-  /* ============ 7. scrollspy for quick nav ============ */
-  const navLinks = document.querySelectorAll(".quicknav a");
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(en => {
-      if (en.isIntersecting) navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
-    });
-  }, { rootMargin: "-20% 0px -70% 0px" });
-  document.querySelectorAll(".section[id]").forEach(s => observer.observe(s));
-</script>
+    /* ============ 7. scrollspy for quick nav ============ */
+    const navLinks = document.querySelectorAll(".quicknav a");
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting) navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    document.querySelectorAll(".section[id]").forEach(s => observer.observe(s));
+  </script>
 </body>
+
 </html>

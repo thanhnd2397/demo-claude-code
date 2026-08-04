@@ -29,6 +29,7 @@
         <mysql-connector-j.version>9.1.0</mysql-connector-j.version>
         <jjwt.version>0.12.6</jjwt.version>
         <springdoc-openapi.version>3.0.3</springdoc-openapi.version>
+        <poi.version>5.3.0</poi.version>
     </properties>
 
     <modules>
@@ -92,6 +93,16 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${springdoc-openapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

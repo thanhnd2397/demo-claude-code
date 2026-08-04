@@ -11,7 +11,7 @@
 
 **Maintenance rule**: this document (its tables and diagrams) MUST be updated whenever a use case, port, adapter, controller endpoint, cache key, or error code is added/changed/removed. See `.claude/rules/implement-mode.md`.
 
-**Companion visualization**: [`docs/architecture/architecture-map.html`](architecture-map.html) is a self-contained, interactive HTML rendering of this same document (module tree, dependency graph, request pipeline, endpoint/error-code/cache-key tables, known gaps). It MUST be kept in sync every time this document changes — see §9 and `.claude/rules/implement-mode.md`.
+**Companion visualization**: [`docs/architecture/architecture-map.html`](architecture-map.html) is a self-contained, interactive HTML rendering of this same document (module tree, dependency graph, request pipeline, endpoint/error-code/cache-key tables, known gaps). It MUST be kept in sync every time this document changes — see §10 and `.claude/rules/implement-mode.md`.
 
 ---
 
@@ -187,6 +187,7 @@ graph LR
 | PATCH | `/administrators/{id}/status` | `ADMIN` role | `UpdateAdministratorStatusUseCase` |
 | GET | `/v3/api-docs` | public | springdoc-openapi (generated OpenAPI 3 spec) |
 | GET | `/swagger-ui/**`, `/swagger-ui.html` | public | springdoc-openapi (Swagger UI) |
+| GET | `/export/users?format=csv\|xlsx` | Bearer token required (falls under `SecurityConfig`'s `.anyRequest().authenticated()` default — no new `permitAll()` rule added) | `ExportController` (demo only, see §8) |
 
 Request pipeline: `SecurityConfig` (stateless, CSRF off) → `JwtAuthenticationFilter` (parses Bearer token via `ValidateAccessTokenUseCase`, sets `SecurityContextHolder`) → `@PreAuthorize` method security → controller → use case → `ResultWrapper` → `BaseController.toResponseEntity` (success = requested status; domain failure = always HTTP 400). Auth failures bypass this: no header → `RestAuthenticationEntryPoint` (401, `0008`); insufficient authority → `RestAccessDeniedHandler` (403, `0009`); invalid/blacklisted token → filter writes 401 directly. `@Valid` DTO binding failures are caught by `ApiExceptionHandler.handleValidation` (400, `0002`) — this handler exists specifically so binding failures never fall through to the default resolver's `/error` forward, which is also `permitAll()` in `SecurityConfig` as defense-in-depth (a request with no credentials re-entering the filter chain on that forward would otherwise be rejected as unauthenticated, masking the real error behind a misleading 401).
 
@@ -226,7 +227,45 @@ Request pipeline: `SecurityConfig` (stateless, CSRF off) → `JwtAuthenticationF
 
 ---
 
-## 8. Known gaps (not bugs to fix silently — context for future work)
+## 8. Generic export module (util layer)
+
+An annotation-driven CSV/XLSX export engine, added as a reusable technical capability in `util/` —
+it does not touch `Administrator` or any existing port/domain model, so it is intentionally **not**
+part of §3's use-case table or §4's dependency diagram (both are Administrator-specific).
+
+**Location**: `util/src/main/java/vn/thanhnd/demo/util/annotation/export/` (annotations) and
+`util/src/main/java/vn/thanhnd/demo/util/export/` (engine).
+
+**Contract** — annotate any class's fields:
+- `@ExportColumn(headerName, order)` — required on every exported field; `order` fixes column
+  position independent of field declaration order.
+- `@ExportStyle(backgroundColor, fontColor, bold, align)` — optional, XLSX only (ignored by CSV).
+- `@ExcelMerge` — optional marker, XLSX only; consecutive rows with an equal value in that column
+  are merged into one vertical cell.
+
+**Design**: Strategy pattern. `ExportService.export(List<?> data, Class<?> type, ExportFormat format)`
+dispatches to a `List<ExportStrategy>` bean (`CsvExportStrategy`, `XlsxExportStrategy`) collected via
+constructor injection, matched by `strategy.format() == format`. `ExportMetadataResolver` reflects a
+class's `@ExportColumn` fields once and caches the sorted result per `Class<?>`
+(`ConcurrentHashMap<Class<?>, List<ExportFieldMetadata>>`).
+- `CsvExportStrategy` — hand-rolled RFC 4180 writer + UTF-8 BOM prefix, no external dependency.
+- `XlsxExportStrategy` — Apache POI `XSSFWorkbook` (new dependency: `poi` / `poi-ooxml`, root `pom.xml`
+  `dependencyManagement`, added to `util/pom.xml`). `CellStyle` objects are cached per export call,
+  keyed by `(backgroundColor, fontColor, bold, align)`, to stay under Excel's per-workbook style cap.
+
+**Demo** (`presentation/src/main/java/vn/thanhnd/demo/presentation/api/export/`): `UserExportDto`
+(record, mock data only, not backed by any domain model) and `ExportController` —
+`GET /export/users?format=csv|xlsx` returns raw `ResponseEntity<byte[]>` with
+`Content-Disposition: attachment`, deliberately bypassing `BaseController`/`RestResponse<T>` since a
+file download isn't a JSON envelope. New constant: `ApplicationConstants.CONTENT_TYPE_XLSX`.
+
+**Auth**: no new `permitAll()` rule was added to `SecurityConfig` — `/export/users` falls under the
+existing `.anyRequest().authenticated()` default, so it requires a valid Bearer token like any other
+non-whitelisted endpoint.
+
+---
+
+## 9. Known gaps (not bugs to fix silently — context for future work)
 
 - **No permissions seeded**: `V1__create_auth_tables.sql` seeds only the `ADMIN` role with zero permissions. `ADMINISTRATOR_READ` / `ADMINISTRATOR_MANAGE` referenced in `@PreAuthorize` are never inserted — those endpoints are unreachable via permission until a migration or manual seed adds them.
 - **`ObjectStorageAdapter`** port exists, no implementation (e.g. MinIO/S3) yet.
@@ -235,16 +274,17 @@ Request pipeline: `SecurityConfig` (stateless, CSRF off) → `JwtAuthenticationF
 
 ---
 
-## 9. How to extend this document
+## 10. How to extend this document
 
 Whenever you add/change a use case, port, adapter, controller endpoint, cache key, or error code:
 1. Update the relevant table in this file (§3–§7).
 2. If the change adds a new cross-feature dependency (a use case now touches a port/cache key it didn't before), update the diagram in §4.
 3. If it's a new business domain (not just a new operation on `Administrator`), add a new subsection under §3 and extend §2's diagram if a new module-level dependency appears.
-4. Update `docs/architecture/architecture-map.html` to match: its `<script>` block holds the same data as plain JS objects/arrays —
-   - `modules` (module tree panels, §1–§2) — add/edit the module's `groups`/`items`, using `newItem: true` for something added this session and `gap: true` for a documented-but-unimplemented piece (mirrors §8).
+4. If it's a generic, non-Administrator technical capability (e.g. the export module), add/extend a standalone subsection like §8 instead of §3/§4.
+5. Update `docs/architecture/architecture-map.html` to match: its `<script>` block holds the same data as plain JS objects/arrays —
+   - `modules` (module tree panels, §1–§2) — add/edit the module's `groups`/`items`, using `newItem: true` for something added this session and `gap: true` for a documented-but-unimplemented piece (mirrors §9).
    - `graphNodes` / `graphEdges` (§4 dependency graph) — add the new use case/port/adapter node and its `uc`/`impl`/`call` edges.
    - `endpoints` (§5), `errors` (§6), `caches` (§7) arrays — add/edit the corresponding row(s).
-   - the `#known-gaps` section's `.gap-card` markup — keep in sync with §8.
+   - the `#known-gaps` section's `.gap-card` markup — keep in sync with §9.
 
 This is enforced by the guardrail in `.claude/rules/implement-mode.md`.
